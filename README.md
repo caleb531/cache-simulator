@@ -33,4 +33,4 @@ The number of bits used to represent each given word address; this value is refl
 
 ### --replacement (optional)
 
-The replacement policy to use for the cache. Accepted values are `lru` (Least Recently Used) and `mru` (Most Recently Used).
+The replacement policy to use for the cache. Accepted values are `lru` (Least Recently Used) and `mru` (Most Recently Used). The default value is `lru`.
