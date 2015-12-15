@@ -193,12 +193,6 @@ def run_simulation(num_blocks_per_set, num_words_per_block, cache_size,
         addr_offset = get_offset(bin_addr, num_offset_bits)
         addr_tag = get_tag(bin_addr, num_tag_bits)
 
-        # Create entry dictionary containing tag and data for this address
-        entry = {
-            'tag': addr_tag,
-            'data': get_all_consecutive_words(
-                word_addr, num_words_per_block)
-        }
         # Add every retrieved address to the list of recently-used addresses
         if addr_tag in recently_used:
             recently_used.remove(addr_tag)
@@ -210,6 +204,12 @@ def run_simulation(num_blocks_per_set, num_words_per_block, cache_size,
             addr_hm = 'HIT'
         else:
             addr_hm = 'miss'
+            # Create entry dictionary containing tag and data for this address
+            entry = {
+                'tag': addr_tag,
+                'data': get_all_consecutive_words(
+                    word_addr, num_words_per_block)
+            }
             set_block(
                 cache=cache,
                 recently_used=recently_used,
