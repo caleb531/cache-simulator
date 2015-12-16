@@ -11,26 +11,30 @@ To see example input and output, see `examples.txt`.
 
 ## Command-line parameters
 
-### --cache-size (required)
+### Required parameters
+
+#### --cache-size
 
 The size of the cache in words (recall that one word is four bytes in MIPS).
 
-### --num-blocks-per-set (required)
+#### --num-blocks-per-set
 
 The program internally represents all cache schemes using a set associative cache. A value of `1` for this parameter implies a direct-mapped cache. A value other than `1` implies either a set associative or fully associative cache.
 
-### --num-words-per-block (required)
+#### --num-words-per-block
 
 The number of words to store for each block in the cache.
 
-### --word-addrs (required)
+#### --word-addrs
 
 One or base-10 word addresses, separated by spaces.
 
-### --num-addr-bits (optional)
+### Optional parameters
+
+#### --num-addr-bits
 
 The number of bits used to represent each given word address; this value is reflected in the *BinAddr* column in the address table. If omitted, the default value is the number of bits needed to represent the largest word address.
 
-### --replacement (optional)
+#### --replacement
 
 The replacement policy to use for the cache. Accepted values are `lru` (Least Recently Used) and `mru` (Most Recently Used). The default value is `lru`.
