@@ -86,3 +86,21 @@ def test_get_offset_0_bit():
     nose.assert_equal(
         sim.get_offset('10110100', num_offset_bits=1),
         '0')
+
+
+def test_get_all_consecutive_words_1_word():
+    nose.assert_list_equal(
+        sim.get_all_consecutive_words(23, num_words_per_block=1),
+        [23])
+
+
+def test_get_all_consecutive_words_2_word():
+    nose.assert_list_equal(
+        sim.get_all_consecutive_words(22, num_words_per_block=2),
+        [22, 23])
+
+
+def test_get_all_consecutive_words_4_word():
+    nose.assert_list_equal(
+        sim.get_all_consecutive_words(21, num_words_per_block=4),
+        [20, 21, 22, 23])
