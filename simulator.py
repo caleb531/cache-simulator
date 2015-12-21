@@ -35,7 +35,7 @@ def get_bin_addr(word_addr, num_addr_bits):
 #      010101010101     => 010 101 010 101
 #      010101010101010  => 010 1010 1010 1010
 #      01010            => 01010
-def prettify_bin_addr(bin_addr):
+def prettify_bin_addr(bin_addr, min_bits_per_group):
 
     mid = len(bin_addr) // 2
 
@@ -45,8 +45,8 @@ def prettify_bin_addr(bin_addr):
         return bin_addr
     else:
         # Otherwise, bisect binary string and separate halves with a space
-        first = prettify_bin_addr(bin_addr[:mid])
-        last = prettify_bin_addr(bin_addr[mid:])
+        first = prettify_bin_addr(bin_addr[:mid], min_bits_per_group)
+        last = prettify_bin_addr(bin_addr[mid:], min_bits_per_group)
         return ' '.join((first, last))
 
 
@@ -228,10 +228,10 @@ def run_simulation(num_blocks_per_set, num_words_per_block, cache_size,
         # Display data for each address as a row in the table
         print(ADDR_ROW_FORMAT_STR.format(
             word_addr,
-            prettify_bin_addr(bin_addr),
-            prettify_bin_addr(addr_tag),
-            prettify_bin_addr(addr_index),
-            prettify_bin_addr(addr_offset),
+            prettify_bin_addr(bin_addr, MIN_BITS_PER_GROUP),
+            prettify_bin_addr(addr_tag, MIN_BITS_PER_GROUP),
+            prettify_bin_addr(addr_index, MIN_BITS_PER_GROUP),
+            prettify_bin_addr(addr_offset, MIN_BITS_PER_GROUP),
             addr_hm))
 
     # Print newline before/after displaying cache table for better readability
