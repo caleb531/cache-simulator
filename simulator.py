@@ -105,7 +105,7 @@ def is_hit(cache, addr_index, addr_tag):
 
 
 # Adds the given entry to the cache at the given index
-def set_block(cache, recently_used, replacement_policy,
+def set_block(cache, recently_used_addrs, replacement_policy,
               num_blocks_per_set, addr_index, new_entry):
 
     blocks = cache[addr_index]
@@ -113,11 +113,11 @@ def set_block(cache, recently_used, replacement_policy,
     if len(blocks) == num_blocks_per_set:
         # Iterate through the recently-used entries in reverse order for MRU
         if replacement_policy == 'mru':
-            recently_used = reversed(recently_used)
+            recently_used_addrs = reversed(recently_used_addrs)
         # Replace the first matching entry with the entry to add
-        for tag in recently_used:
+        for recent_index, recent_tag in recently_used_addrs:
             for i, block in enumerate(blocks):
-                if block['tag'] == tag:
+                if recent_index == addr_index and block['tag'] == recent_tag:
                     blocks[i] = new_entry
                     return
     else:
@@ -178,7 +178,7 @@ def run_simulation(num_blocks_per_set, num_words_per_block, cache_size,
         index = get_bin_addr(i, num_index_bits)
         cache[index] = []
     # Store recently-used address entries
-    recently_used = []
+    recently_used_addrs = []
 
     # Display table header for the table of address addresss
     print()
@@ -193,10 +193,12 @@ def run_simulation(num_blocks_per_set, num_words_per_block, cache_size,
         addr_offset = get_offset(bin_addr, num_offset_bits)
         addr_tag = get_tag(bin_addr, num_tag_bits)
 
+        # The index and tag (not the offset) uniquely identify each address
+        addr_id = (addr_index, addr_tag)
         # Add every retrieved address to the list of recently-used addresses
-        if addr_tag in recently_used:
-            recently_used.remove(addr_tag)
-        recently_used.append(addr_tag)
+        if addr_id in recently_used_addrs:
+            recently_used_addrs.remove(addr_id)
+        recently_used_addrs.append(addr_id)
 
         # Determine the Hit/Miss value for this address to display in the table
         if is_hit(cache, addr_index, addr_tag):
@@ -212,7 +214,7 @@ def run_simulation(num_blocks_per_set, num_words_per_block, cache_size,
             }
             set_block(
                 cache=cache,
-                recently_used=recently_used,
+                recently_used_addrs=recently_used_addrs,
                 replacement_policy=replacement_policy,
                 num_blocks_per_set=num_blocks_per_set,
                 addr_index=addr_index,
