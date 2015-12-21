@@ -35,6 +35,6 @@ One or base-10 word addresses, separated by spaces.
 
 The number of bits used to represent each given word address; this value is reflected in the *BinAddr* column in the address table. If omitted, the default value is the number of bits needed to represent the largest word address.
 
-#### --replacement
+#### --replacement-policy
 
 The replacement policy to use for the cache. Accepted values are `lru` (Least Recently Used) and `mru` (Most Recently Used). The default value is `lru`.

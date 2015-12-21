@@ -142,7 +142,7 @@
                          180,181 44,45 252,253 186,187
 
 # Fully associative (MRU)
-./simulator.py --cache-size 8 --num-blocks-per-set 4 --num-words-per-block 2 --replacement mru --word-addrs 3 180 43 2 191 88 190 14 181 44 186 253
+./simulator.py --cache-size 8 --num-blocks-per-set 4 --num-words-per-block 2 --replacement-policy mru --word-addrs 3 180 43 2 191 88 190 14 181 44 186 253
 
      WordAddr      BinAddr          Tag        Index       Offset     Hit/Miss
 --------------------------------------------------------------------------------

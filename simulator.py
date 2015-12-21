@@ -105,14 +105,14 @@ def is_hit(cache, addr_index, addr_tag):
 
 
 # Adds the given entry to the cache at the given index
-def set_block(cache, recently_used, replacement,
+def set_block(cache, recently_used, replacement_policy,
               num_blocks_per_set, addr_index, new_entry):
 
     blocks = cache[addr_index]
     # Replace MRU or LRU entry if number of blocks in set exceeds the limit
     if len(blocks) == num_blocks_per_set:
         # Iterate through the recently-used entries in reverse order for MRU
-        if replacement == 'mru':
+        if replacement_policy == 'mru':
             recently_used = reversed(recently_used)
         # Replace the first matching entry with the entry to add
         for tag in recently_used:
@@ -159,7 +159,7 @@ def display_cache(cache):
 # Runs the cache simulation by displaying address data as they are read and
 # displaying the final cache contents
 def run_simulation(num_blocks_per_set, num_words_per_block, cache_size,
-                   replacement, num_addr_bits, word_addrs):
+                   replacement_policy, num_addr_bits, word_addrs):
 
     num_blocks = cache_size // num_words_per_block
     num_sets = num_blocks // num_blocks_per_set
@@ -213,7 +213,7 @@ def run_simulation(num_blocks_per_set, num_words_per_block, cache_size,
             set_block(
                 cache=cache,
                 recently_used=recently_used,
-                replacement=replacement,
+                replacement_policy=replacement_policy,
                 num_blocks_per_set=num_blocks_per_set,
                 addr_index=addr_index,
                 new_entry=entry)
@@ -277,10 +277,10 @@ def parse_cli_args():
         help='the number of bits in each given word address')
 
     parser.add_argument(
-        '--replacement',
+        '--replacement-policy',
         choices=('lru', 'mru'),
         default='lru',
-        help='the cache replacement scheme (LRU or MRU)')
+        help='the cache replacement policy (LRU or MRU)')
 
     return parser.parse_args()
 
@@ -292,7 +292,7 @@ def main():
         num_blocks_per_set=cli_args.num_blocks_per_set,
         num_words_per_block=cli_args.num_words_per_block,
         cache_size=cli_args.cache_size,
-        replacement=cli_args.replacement,
+        replacement_policy=cli_args.replacement_policy,
         num_addr_bits=cli_args.num_addr_bits,
         word_addrs=cli_args.word_addrs)
 
