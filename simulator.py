@@ -84,8 +84,8 @@ def get_offset(bin_addr, num_offset_bits):
         return offset
 
 
-# Get consecutive words for the given word address (including itself)
-def get_all_consecutive_words(word_addr, num_words_per_block):
+# Get all consecutive words for the given word address (including itself)
+def get_consecutive_words(word_addr, num_words_per_block):
 
     offset = word_addr % num_words_per_block
     return [(word_addr - offset + i) for i in range(num_words_per_block)]
@@ -207,7 +207,7 @@ def run_simulation(num_blocks_per_set, num_words_per_block, cache_size,
             # Create entry dictionary containing tag and data for this address
             entry = {
                 'tag': addr_tag,
-                'data': get_all_consecutive_words(
+                'data': get_consecutive_words(
                     word_addr, num_words_per_block)
             }
             set_block(

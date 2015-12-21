@@ -88,19 +88,22 @@ def test_get_offset_0_bit():
         '0')
 
 
-def test_get_all_consecutive_words_1_word():
+def test_get_consecutive_words_1_word():
+    """get_consecutive_words should return same word for 1-word blocks"""
     nose.assert_list_equal(
-        sim.get_all_consecutive_words(23, num_words_per_block=1),
+        sim.get_consecutive_words(23, num_words_per_block=1),
         [23])
 
 
-def test_get_all_consecutive_words_2_word():
+def test_get_consecutive_words_2_word():
+    """get_consecutive_words should return correct words for 2-word blocks"""
     nose.assert_list_equal(
-        sim.get_all_consecutive_words(22, num_words_per_block=2),
+        sim.get_consecutive_words(22, num_words_per_block=2),
         [22, 23])
 
 
-def test_get_all_consecutive_words_4_word():
+def test_get_consecutive_words_4_word():
+    """get_consecutive_words should return correct words for 2-word blocks"""
     nose.assert_list_equal(
-        sim.get_all_consecutive_words(21, num_words_per_block=4),
+        sim.get_consecutive_words(21, num_words_per_block=4),
         [20, 21, 22, 23])
