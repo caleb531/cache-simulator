@@ -109,7 +109,7 @@ def test_get_consecutive_words_4_word():
         [20, 21, 22, 23])
 
 
-class TestCacheHitMiss(object):
+class TestIsHit(object):
     "is_hit should behave correctly in all cases"
 
     def __init__(self):
