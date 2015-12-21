@@ -39,7 +39,7 @@ def prettify_bin_addr(bin_addr, min_bits_per_group):
 
     mid = len(bin_addr) // 2
 
-    if mid < MIN_BITS_PER_GROUP:
+    if mid < min_bits_per_group:
         # Return binary string immediately if bisecting the binary string
         # produces a binary string which is too short
         return bin_addr
