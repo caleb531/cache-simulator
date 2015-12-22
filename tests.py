@@ -103,7 +103,7 @@ def test_get_consecutive_words_2_word():
 
 
 def test_get_consecutive_words_4_word():
-    """get_consecutive_words should return correct words for 2-word blocks"""
+    """get_consecutive_words should return correct words for 4-word blocks"""
     nose.assert_list_equal(
         sim.get_consecutive_words(21, num_words_per_block=4),
         [20, 21, 22, 23])
