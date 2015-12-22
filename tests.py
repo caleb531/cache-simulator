@@ -84,7 +84,7 @@ def test_get_offset_2_bit():
 def test_get_offset_0_bit():
     """get_offset should return '0' if no bits are allocated to an offset"""
     nose.assert_equal(
-        sim.get_offset('10110100', num_offset_bits=1),
+        sim.get_offset('10110100', num_offset_bits=0),
         '0')
 
 
