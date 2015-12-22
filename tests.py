@@ -110,7 +110,7 @@ def test_get_consecutive_words_4_word():
 
 
 class TestIsHit(object):
-    "is_hit should behave correctly in all cases"
+    """is_hit should behave correctly in all cases"""
 
     def __init__(self):
         self.cache = {
@@ -131,3 +131,76 @@ class TestIsHit(object):
     def test_is_hit_false_tag_mismatch(self):
         """is_hit should return False if tag does not exist in cache"""
         nose.assert_false(sim.is_hit(self.cache, '010', '1010'))
+
+
+class TestSetBlock(object):
+    """set_block should behave correctly in all cases"""
+
+    def reset(self):
+        self.cache = {
+            '010': [
+                {'tag': '1000'},
+                {'tag': '1100'},
+                {'tag': '1101'},
+                {'tag': '1110'}
+            ]
+        }
+        self.recently_used_addrs = [
+            ('100', '1100'),
+            ('010', '1101'),
+            ('010', '1110')
+        ]
+        self.new_entry = {'tag': '1111'}
+
+    def test_set_block_empty_set(self):
+        """set_block should add new block if index set is empty"""
+        self.reset()
+        self.cache['010'][:] = []
+        sim.set_block(
+            cache=self.cache,
+            recently_used_addrs=[],
+            replacement_policy='lru',
+            num_blocks_per_set=4,
+            addr_index='010',
+            new_entry=self.new_entry)
+        nose.assert_dict_equal(self.cache, {
+            '010': [{'tag': '1111'}]
+        })
+
+    def test_set_block_lru_replacement(self):
+        """set_block should perform LRU replacement as needed"""
+        self.reset()
+        sim.set_block(
+            cache=self.cache,
+            recently_used_addrs=self.recently_used_addrs,
+            replacement_policy='lru',
+            num_blocks_per_set=4,
+            addr_index='010',
+            new_entry=self.new_entry)
+        nose.assert_dict_equal(self.cache, {
+            '010': [
+                {'tag': '1000'},
+                {'tag': '1100'},
+                {'tag': '1111'},
+                {'tag': '1110'}
+            ]
+        })
+
+    def test_set_block_mru_replacement(self):
+        """set_block should optionally perform MRU replacement as needed"""
+        self.reset()
+        sim.set_block(
+            cache=self.cache,
+            recently_used_addrs=self.recently_used_addrs,
+            replacement_policy='mru',
+            num_blocks_per_set=4,
+            addr_index='010',
+            new_entry=self.new_entry)
+        nose.assert_dict_equal(self.cache, {
+            '010': [
+                {'tag': '1000'},
+                {'tag': '1100'},
+                {'tag': '1101'},
+                {'tag': '1111'}
+            ]
+        })
