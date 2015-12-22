@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import argparse
-import collections
 import math
 import shutil
 
@@ -108,6 +107,9 @@ def is_hit(cache, addr_index, addr_tag):
 def set_block(cache, recently_used_addrs, replacement_policy,
               num_blocks_per_set, addr_index, new_entry):
 
+    # Create set in cache if it doesn't exist
+    if addr_index not in cache:
+        cache[addr_index] = []
     blocks = cache[addr_index]
     # Replace MRU or LRU entry if number of blocks in set exceeds the limit
     if len(blocks) == num_blocks_per_set:
@@ -139,18 +141,20 @@ def display_cache(cache):
     cache_row_format_str = ''.join('{{:^{}}}'.format(
         TABLE_WIDTH // num_cache_cols) for i in range(num_cache_cols))
 
+    cache_set_names = sorted(cache.keys())
     # Display table header (each column name is a cache index)
     print('Cache'.center(TABLE_WIDTH))
     print_table_separator()
     # A cache containing only one set is considered a fully associative cache
     if len(cache) != 1:
         # Display set names in table header if cache is not fully associative
-        print(cache_row_format_str.format(*cache.keys()))
+        print(cache_row_format_str.format(*cache_set_names))
         print_table_separator()
 
     # Build list of strings, each representing a list of entries in a block
     block_list_strs = []
-    for index, blocks in cache.items():
+    for index in cache_set_names:
+        blocks = cache[index]
         block_list_strs.append(
             ' '.join(','.join(map(str, entry['data'])) for entry in blocks))
     print(cache_row_format_str.format(*block_list_strs))
@@ -172,15 +176,10 @@ def run_simulation(num_blocks_per_set, num_words_per_block, cache_size,
     num_index_bits = int(math.log2(num_sets))
     num_tag_bits = num_addr_bits - num_index_bits - num_offset_bits
 
-    # Initialize cache with the maximum number of sets
-    cache = collections.OrderedDict()
-    for i in range(num_sets):
-        index = get_bin_addr(i, num_index_bits)
-        cache[index] = []
-    # Store recently-used address entries
+    cache = {}
     recently_used_addrs = []
 
-    # Display table header for the table of address addresss
+    # Display table header for the table of addresses
     print()
     print(ADDR_ROW_FORMAT_STR.format(*ADDR_COL_NAMES))
     print_table_separator()
