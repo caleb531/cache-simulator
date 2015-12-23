@@ -7,7 +7,7 @@ import src.simulator as sim
 def test_get_bin_addr_unpadded():
     """get_bin_addr should return unpadded binary address of word address"""
     nose.assert_equal(
-        sim.get_bin_addr(180, num_addr_bits=8),
+        sim.get_bin_addr(180),
         '10110100')
 
 
