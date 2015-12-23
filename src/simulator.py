@@ -122,12 +122,15 @@ def is_hit(cache, addr_index, addr_tag):
 
     # Ensure that indexless fully associative caches are accessed correctly
     if addr_index is None:
-        addr_index = '0'
-    if addr_index in cache:
+        blocks = cache['0']
+    elif addr_index in cache:
         blocks = cache[addr_index]
-        for block in blocks:
-            if block['tag'] == addr_tag:
-                return True
+    else:
+        return False
+
+    for block in blocks:
+        if block['tag'] == addr_tag:
+            return True
 
     return False
 
@@ -138,8 +141,9 @@ def set_block(cache, recently_used_addrs, replacement_policy,
 
     # Place all cache entries in a single set if cache is fully associative
     if addr_index is None:
-        addr_index = '0'
-    blocks = cache[addr_index]
+        blocks = cache['0']
+    else:
+        blocks = cache[addr_index]
     # Replace MRU or LRU entry if number of blocks in set exceeds the limit
     if len(blocks) == num_blocks_per_set:
         # Iterate through the recently-used entries in reverse order for MRU
