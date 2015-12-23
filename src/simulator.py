@@ -177,8 +177,7 @@ def create_cache(num_sets, num_index_bits):
     return cache
 
 
-# Runs the cache simulation by displaying address data as they are read and
-# displaying the final cache contents
+# Simulate the cache by reading the given address references into it
 def read_refs_into_cache(num_sets, num_blocks_per_set, num_index_bits,
                          num_words_per_block, replacement_policy, refs):
 
