@@ -342,7 +342,7 @@ class TestSimulator(object):
         nose.assert_set_equal(self.get_hits(ref_statuses), {3, 8})
 
     def test_display_addr_refs(self):
-        """should correctly display table of address references"""
+        """should display table of address references"""
         refs = sim.get_addr_refs(
             word_addrs=self.WORD_ADDRS, num_addr_bits=8,
             num_tag_bits=5, num_index_bits=2, num_offset_bits=1)
@@ -354,12 +354,11 @@ class TestSimulator(object):
         num_cols = 6
         col_width = TestSimulator.TABLE_WIDTH // num_cols
         nose.assert_regexp_matches(
-            table_output, r'{}\s*{}\s*{}\s*{}\s*{}\s*{}'.format(
+            table_output, r'{}\s*{}\s*{}\s*{}\s*{}\s*{}\n{}'.format(
                 'WordAddr'.rjust(col_width), 'BinAddr'.rjust(col_width),
                 'Tag'.rjust(col_width), 'Index'.rjust(col_width),
-                'Offset'.rjust(col_width), 'Hit/Miss'.rjust(col_width)))
-        nose.assert_regexp_matches(
-            table_output, ('-' * TestSimulator.TABLE_WIDTH))
+                'Offset'.rjust(col_width), 'Hit/Miss'.rjust(col_width),
+                ('-' * TestSimulator.TABLE_WIDTH)))
         nose.assert_regexp_matches(
             table_output, r'{}\s*{}\s*{}\s*{}\s*{}\s*{}'.format(
                 '253'.rjust(col_width), '1111 1101'.rjust(col_width),
@@ -367,7 +366,7 @@ class TestSimulator(object):
                 '1'.rjust(col_width), 'HIT'.rjust(col_width)))
 
     def test_display_cache(self):
-        """should correctly display table of cache contents"""
+        """should display table for direct-mapped/set associative cache"""
         out = io.StringIO()
         with contextlib.redirect_stdout(out):
             sim.display_cache({
@@ -383,9 +382,11 @@ class TestSimulator(object):
         num_cols = 2
         col_width = TestSimulator.TABLE_WIDTH // num_cols
         nose.assert_regexp_matches(
-            table_output, 'Cache'.center(TestSimulator.TABLE_WIDTH))
-        nose.assert_regexp_matches(
-            table_output, ('-' * TestSimulator.TABLE_WIDTH))
+            table_output, '{}\n{}'.format(
+                'Cache'.center(TestSimulator.TABLE_WIDTH),
+                ('-' * TestSimulator.TABLE_WIDTH)))
+        nose.assert_equal(
+            table_output.count('-'), TestSimulator.TABLE_WIDTH * 2)
         nose.assert_regexp_matches(
             table_output, r'{}{}'.format(
                 '000'.center(col_width),
@@ -394,3 +395,23 @@ class TestSimulator(object):
             table_output, r'{}{}'.format(
                 '88,89'.center(col_width),
                 '2,3 42,43'.center(col_width)))
+
+    def test_display_cache_fully_assoc(self):
+        """should correctly display table for fully associative cache"""
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            sim.display_cache({
+                '0': [
+                    {'tag': '0000001', 'data': [2, 3]},
+                    {'tag': '1111110', 'data': [252, 253]}
+                ]
+            })
+        table_output = out.getvalue()
+        nose.assert_regexp_matches(
+            table_output, '{}\n{}'.format(
+                'Cache'.center(TestSimulator.TABLE_WIDTH),
+                ('-' * TestSimulator.TABLE_WIDTH)))
+        nose.assert_equal(
+            table_output.count('-'), TestSimulator.TABLE_WIDTH)
+        nose.assert_regexp_matches(
+            table_output, '2,3 252,253'.center(TestSimulator.TABLE_WIDTH))
