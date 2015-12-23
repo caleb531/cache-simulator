@@ -120,6 +120,9 @@ class Reference(object):
 # indicating a hit; returns False otherwise, indicating a miss
 def is_hit(cache, addr_index, addr_tag):
 
+    # Ensure that indexless fully associative caches are accessed correctly
+    if addr_index is None:
+        addr_index = '0'
     if addr_index in cache:
         blocks = cache[addr_index]
         for block in blocks:
