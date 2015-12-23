@@ -152,12 +152,6 @@ def set_block(cache, recently_used_addrs, replacement_policy,
         blocks.append(new_entry)
 
 
-# Prints a separator used to separate table headers/rows
-def print_table_separator():
-
-    print('-' * TABLE_WIDTH)
-
-
 # Retrieves a list of address references for use by simulator
 def get_addr_refs(word_addrs, num_addr_bits,
                   num_offset_bits, num_index_bits, num_tag_bits):
@@ -261,29 +255,24 @@ def display_addr_refs(refs, ref_statuses):
 # Displays the contents of the given cache as nicely-formatted table
 def display_cache(cache):
 
-    # Parameters for how table columns are formatted
-    num_cache_cols = len(cache)
-    # Build the format string used to space columns evenly in the cache table
-    cache_row_format_str = ''.join('{{:^{}}}'.format(
-        TABLE_WIDTH // num_cache_cols) for i in range(num_cache_cols))
+    table = Table(
+        num_cols=len(cache), width=TABLE_WIDTH, alignment='center')
+    table.title = 'Cache'
 
     cache_set_names = sorted(cache.keys())
-    # Display table header (each column name is a cache index)
-    print('Cache'.center(TABLE_WIDTH))
-    print_table_separator()
     # A cache containing only one set is considered a fully associative cache
     if len(cache) != 1:
         # Display set names in table header if cache is not fully associative
-        print(cache_row_format_str.format(*cache_set_names))
-        print_table_separator()
+        table.header[:] = cache_set_names
 
-    # Build list of strings, each representing a list of entries in a block
-    block_list_strs = []
+    # Add to table the cache entries for each block
+    table.rows.append([])
     for index in cache_set_names:
         blocks = cache[index]
-        block_list_strs.append(
+        table.rows[0].append(
             ' '.join(','.join(map(str, entry['data'])) for entry in blocks))
-    print(cache_row_format_str.format(*block_list_strs))
+
+    print(table)
 
 
 # Run the entire cache simulation
@@ -309,6 +298,7 @@ def run_simulation(num_blocks_per_set, num_words_per_block, cache_size,
         num_sets, num_blocks_per_set, num_index_bits,
         num_words_per_block, replacement_policy, refs)
 
+    print()
     display_addr_refs(refs, ref_statuses)
     print()
     display_cache(cache)
