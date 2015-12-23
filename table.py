@@ -4,7 +4,7 @@
 # A class for displaying ASCII tables
 class Table(object):
 
-    # Map alignment keywords to their respective format specifiers
+    # Map alignment keywords to their respective string format specifiers
     alignment_symbols = {
         'left': '<',
         'center': '^',
@@ -12,6 +12,7 @@ class Table(object):
     }
 
     def __init__(self, num_cols, width, alignment='left', title=None):
+
         self.title = title
         self.width = width
         self.num_cols = num_cols
@@ -24,11 +25,6 @@ class Table(object):
 
         return '-' * self.width
 
-    # Retrieves the format symbol used for the current table alignment
-    def get_alignment_symbol(self):
-
-        return Table.alignment_symbols[self.alignment]
-
     def __str__(self):
 
         table_strs = []
@@ -39,7 +35,7 @@ class Table(object):
 
         # Format string used to align columns
         cell_format_str = ''.join('{{:{}{}}}'.format(
-            self.get_alignment_symbol(),
+            Table.alignment_symbols[self.alignment],
             self.width // self.num_cols) for i in range(self.num_cols))
 
         if self.header:
