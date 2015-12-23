@@ -156,7 +156,7 @@ class TestSetBlock(object):
         ]
         self.new_entry = {'tag': '1111'}
 
-    def test_set_block_empty_set(self):
+    def test_empty_set(self):
         """set_block should add new block if index set is empty"""
         self.reset()
         self.cache['010'][:] = []
@@ -171,7 +171,7 @@ class TestSetBlock(object):
             '010': [{'tag': '1111'}]
         })
 
-    def test_set_block_lru_replacement(self):
+    def test_lru_replacement(self):
         """set_block should perform LRU replacement as needed"""
         self.reset()
         sim.set_block(
@@ -190,7 +190,7 @@ class TestSetBlock(object):
             ]
         })
 
-    def test_set_block_mru_replacement(self):
+    def test_mru_replacement(self):
         """set_block should optionally perform MRU replacement as needed"""
         self.reset()
         sim.set_block(
