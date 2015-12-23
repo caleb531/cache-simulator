@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
+import contextlib
 import copy
+import io
 import nose.tools as nose
 import src.simulator as sim
 
@@ -337,3 +339,20 @@ class TestSimulator(object):
             ]
         })
         nose.assert_set_equal(self.get_hits(ref_statuses), {3, 8})
+
+    def test_display_addr_refs(self):
+        """should correctly display table of address references"""
+        refs = sim.get_addr_refs(
+            word_addrs=self.WORD_ADDRS, num_addr_bits=8,
+            num_offset_bits=1, num_index_bits=2, num_tag_bits=5)
+        ref_statuses = (['miss'] * 11) + ['HIT']
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            sim.display_addr_refs(refs, ref_statuses)
+        table_output = out.getvalue()
+        nose.assert_regexp_matches(
+            table_output, r'{}\s*{}\s*{}\s*{}\s*{}\s*{}'.format(
+                'WordAddr', 'BinAddr', 'Tag', 'Index', 'Offset', 'Hit/Miss'))
+        nose.assert_regexp_matches(
+            table_output, r'{}\s*{}\s*{}\s*{}\s*{}\s*{}'.format(
+                '253', '1111 1101', '11111', '10', '1', 'HIT'))
