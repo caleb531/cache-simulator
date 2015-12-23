@@ -365,6 +365,34 @@ class TestSimulator(object):
                 '11111'.rjust(col_width), '10'.rjust(col_width),
                 '1'.rjust(col_width), 'HIT'.rjust(col_width)))
 
+    def test_display_addr_refs_no_index(self):
+        """should display n/a for index when there are no index bits"""
+        refs = sim.get_addr_refs(
+            word_addrs=self.WORD_ADDRS, num_addr_bits=8,
+            num_tag_bits=7, num_index_bits=0, num_offset_bits=1)
+        ref_statuses = ['miss'] * 12
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            sim.display_addr_refs(refs, ref_statuses)
+        table_output = out.getvalue()
+        nose.assert_regexp_matches(
+            table_output, r'\s*{}\s*{}\s*{}'.format(
+                'n/a', '\d', 'miss'))
+
+    def test_display_addr_refs_no_offset(self):
+        """should display n/a for offset when there are no offset bits"""
+        refs = sim.get_addr_refs(
+            word_addrs=self.WORD_ADDRS, num_addr_bits=8,
+            num_tag_bits=4, num_index_bits=4, num_offset_bits=0)
+        ref_statuses = ['miss'] * 12
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            sim.display_addr_refs(refs, ref_statuses)
+        table_output = out.getvalue()
+        nose.assert_regexp_matches(
+            table_output, r'\s*{}\s*{}\s*{}'.format(
+                '\d\d', 'n/a', 'miss'))
+
     def test_display_cache(self):
         """should display table for direct-mapped/set associative cache"""
         out = io.StringIO()
