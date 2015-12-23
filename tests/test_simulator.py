@@ -241,7 +241,7 @@ class TestSimulator(object):
         """get_addr_refs should return correct reference data"""
         refs = sim.get_addr_refs(
             word_addrs=self.WORD_ADDRS, num_addr_bits=8,
-            num_offset_bits=1, num_index_bits=3, num_tag_bits=4)
+            num_tag_bits=4, num_index_bits=3, num_offset_bits=1)
         ref = refs[1]
         nose.assert_equal(len(refs), len(self.WORD_ADDRS))
         nose.assert_equal(ref.word_addr, 180)
@@ -259,7 +259,7 @@ class TestSimulator(object):
         """read_refs_into_cache should work for direct-mapped LRU cache"""
         refs = sim.get_addr_refs(
             word_addrs=[0, 8, 0, 6, 8], num_addr_bits=4,
-            num_offset_bits=0, num_index_bits=2, num_tag_bits=2)
+            num_tag_bits=2, num_index_bits=2, num_offset_bits=0)
         cache, ref_statuses = sim.read_refs_into_cache(
             refs=refs, num_sets=4, num_blocks_per_set=1,
             num_words_per_block=1, num_index_bits=2, replacement_policy='lru')
@@ -279,7 +279,7 @@ class TestSimulator(object):
         """read_refs_into_cache should work for set associative LRU cache"""
         refs = sim.get_addr_refs(
             word_addrs=self.WORD_ADDRS, num_addr_bits=8,
-            num_offset_bits=1, num_index_bits=2, num_tag_bits=5)
+            num_tag_bits=5, num_index_bits=2, num_offset_bits=1)
         cache, ref_statuses = sim.read_refs_into_cache(
             refs=refs, num_sets=4, num_blocks_per_set=3,
             num_words_per_block=2, num_index_bits=2, replacement_policy='lru')
@@ -308,7 +308,7 @@ class TestSimulator(object):
         """read_refs_into_cache should work for fully associative LRU cache"""
         refs = sim.get_addr_refs(
             word_addrs=self.WORD_ADDRS, num_addr_bits=8,
-            num_offset_bits=1, num_index_bits=0, num_tag_bits=7)
+            num_tag_bits=7, num_index_bits=0, num_offset_bits=1)
         cache, ref_statuses = sim.read_refs_into_cache(
             refs=refs, num_sets=1, num_blocks_per_set=4,
             num_words_per_block=2, num_index_bits=0, replacement_policy='lru')
@@ -326,7 +326,7 @@ class TestSimulator(object):
         """read_refs_into_cache should work for fully associative MRU cache"""
         refs = sim.get_addr_refs(
             word_addrs=self.WORD_ADDRS, num_addr_bits=8,
-            num_offset_bits=1, num_index_bits=0, num_tag_bits=7)
+            num_tag_bits=7, num_index_bits=0, num_offset_bits=1)
         cache, ref_statuses = sim.read_refs_into_cache(
             refs=refs, num_sets=1, num_blocks_per_set=4,
             num_words_per_block=2, num_index_bits=0, replacement_policy='mru')
@@ -344,7 +344,7 @@ class TestSimulator(object):
         """should correctly display table of address references"""
         refs = sim.get_addr_refs(
             word_addrs=self.WORD_ADDRS, num_addr_bits=8,
-            num_offset_bits=1, num_index_bits=2, num_tag_bits=5)
+            num_tag_bits=5, num_index_bits=2, num_offset_bits=1)
         ref_statuses = (['miss'] * 11) + ['HIT']
         out = io.StringIO()
         with contextlib.redirect_stdout(out):
