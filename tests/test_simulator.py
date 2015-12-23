@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import copy
 import nose.tools as nose
 import src.simulator as sim
 
@@ -214,6 +215,19 @@ class TestSetBlock(object):
                 {'tag': '1111'}
             ]
         })
+
+    def test_no_replacement(self):
+        """set_block should not perform replacement if there are no recents"""
+        self.reset()
+        original_cache = copy.deepcopy(self.cache)
+        sim.set_block(
+            cache=self.cache,
+            recently_used_addrs=[],
+            replacement_policy='lru',
+            num_blocks_per_set=4,
+            addr_index='010',
+            new_entry=self.new_entry)
+        nose.assert_dict_equal(self.cache, original_cache)
 
 
 class TestSimulator(object):
