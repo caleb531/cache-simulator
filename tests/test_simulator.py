@@ -236,25 +236,7 @@ class TestSimulator(object):
     """all simulator functions should behave correctly in all cases"""
 
     WORD_ADDRS = [3, 180, 43, 2, 191, 88, 190, 14, 181, 44, 186, 253]
-    CACHE_SET_ASSOC = {
-        '00': [
-            {'tag': '01011', 'data': [88, 89]}
-        ],
-        '01': [
-            {'tag': '00000', 'data': [2, 3]},
-            {'tag': '00101', 'data': [42, 43]},
-            {'tag': '10111', 'data': [186, 187]}
-        ],
-        '10': [
-            {'tag': '10110', 'data': [180, 181]},
-            {'tag': '00101', 'data': [44, 45]},
-            {'tag': '11111', 'data': [252, 253]}
-        ],
-        '11': [
-            {'tag': '10111', 'data': [190, 191]},
-            {'tag': '00001', 'data': [14, 15]},
-        ]
-    }
+    TABLE_WIDTH = 80
 
     def test_get_addr_refs(self):
         """get_addr_refs should return correct reference data"""
@@ -302,7 +284,25 @@ class TestSimulator(object):
         cache, ref_statuses = sim.read_refs_into_cache(
             refs=refs, num_sets=4, num_blocks_per_set=3,
             num_words_per_block=2, num_index_bits=2, replacement_policy='lru')
-        nose.assert_dict_equal(cache, TestSimulator.CACHE_SET_ASSOC)
+        nose.assert_dict_equal(cache, {
+            '00': [
+                {'tag': '01011', 'data': [88, 89]}
+            ],
+            '01': [
+                {'tag': '00000', 'data': [2, 3]},
+                {'tag': '00101', 'data': [42, 43]},
+                {'tag': '10111', 'data': [186, 187]}
+            ],
+            '10': [
+                {'tag': '10110', 'data': [180, 181]},
+                {'tag': '00101', 'data': [44, 45]},
+                {'tag': '11111', 'data': [252, 253]}
+            ],
+            '11': [
+                {'tag': '10111', 'data': [190, 191]},
+                {'tag': '00001', 'data': [14, 15]},
+            ]
+        })
         nose.assert_set_equal(self.get_hits(ref_statuses), {3, 6, 8})
 
     def test_read_refs_into_cache_fully_associative_lru(self):
@@ -351,25 +351,46 @@ class TestSimulator(object):
         with contextlib.redirect_stdout(out):
             sim.display_addr_refs(refs, ref_statuses)
         table_output = out.getvalue()
+        num_cols = 6
+        col_width = TestSimulator.TABLE_WIDTH // num_cols
         nose.assert_regexp_matches(
             table_output, r'{}\s*{}\s*{}\s*{}\s*{}\s*{}'.format(
-                'WordAddr', 'BinAddr', 'Tag', 'Index', 'Offset', 'Hit/Miss'))
+                'WordAddr'.rjust(col_width), 'BinAddr'.rjust(col_width),
+                'Tag'.rjust(col_width), 'Index'.rjust(col_width),
+                'Offset'.rjust(col_width), 'Hit/Miss'.rjust(col_width)))
+        nose.assert_regexp_matches(
+            table_output, ('-' * TestSimulator.TABLE_WIDTH))
         nose.assert_regexp_matches(
             table_output, r'{}\s*{}\s*{}\s*{}\s*{}\s*{}'.format(
-                '253', '1111 1101', '11111', '10', '1', 'HIT'))
+                '253'.rjust(col_width), '1111 1101'.rjust(col_width),
+                '11111'.rjust(col_width), '10'.rjust(col_width),
+                '1'.rjust(col_width), 'HIT'.rjust(col_width)))
 
     def test_display_cache(self):
         """should correctly display table of cache contents"""
         out = io.StringIO()
         with contextlib.redirect_stdout(out):
-            sim.display_cache(TestSimulator.CACHE_SET_ASSOC)
+            sim.display_cache({
+                '000': [
+                    {'tag': '0101', 'data': [88, 89]}
+                ],
+                '001': [
+                    {'tag': '0000', 'data': [2, 3]},
+                    {'tag': '0010', 'data': [42, 43]},
+                ]
+            })
         table_output = out.getvalue()
+        num_cols = 2
+        col_width = TestSimulator.TABLE_WIDTH // num_cols
         nose.assert_regexp_matches(
-            table_output, 'Cache'.center(80))
+            table_output, 'Cache'.center(TestSimulator.TABLE_WIDTH))
         nose.assert_regexp_matches(
-            table_output, r'{}\s*{}\s*{}\s*{}'.format(
-                '00', '01', '10', '11'))
+            table_output, ('-' * TestSimulator.TABLE_WIDTH))
         nose.assert_regexp_matches(
-            table_output, r'{}\s*{}\s*{}\s*{}'.format(
-                '88,89', '2,3 42,43 186,187',
-                '180,181 44,45 252,253', '190,191 14,15'))
+            table_output, r'{}{}'.format(
+                '000'.center(col_width),
+                '001'.center(col_width)))
+        nose.assert_regexp_matches(
+            table_output, r'{}{}'.format(
+                '88,89'.center(col_width),
+                '2,3 42,43'.center(col_width)))
