@@ -4,18 +4,14 @@ import argparse
 import math
 import shutil
 from enum import Enum
+from table import Table
 
 
 # The character-width of all displayed tables
 # Attempt to fit table to size of terminal window, otherwise use default of 80
 TABLE_WIDTH = shutil.get_terminal_size((80, 20)).columns
-# The names of all columns for a displayed address table
-ADDR_COL_NAMES = ('WordAddr', 'BinAddr', 'Tag', 'Index', 'Offset', 'Hit/Miss')
-# The number of columns for a displayed address table
-NUM_ADDR_COLS = len(ADDR_COL_NAMES)
-# Build the format string used to space columns evenly in the address table
-ADDR_ROW_FORMAT_STR = ''.join('{{:>{}}}'.format(
-    TABLE_WIDTH // NUM_ADDR_COLS) for i in range(NUM_ADDR_COLS))
+# The names of all reference table columns
+REF_COL_NAMES = ('WordAddr', 'BinAddr', 'Tag', 'Index', 'Offset', 'Hit/Miss')
 # The minimum number of bits required per group in a prettified binary string
 MIN_BITS_PER_GROUP = 3
 
@@ -234,10 +230,9 @@ def read_refs_into_cache(num_sets, num_blocks_per_set, num_index_bits,
 # Displays details for each address reference, including its hit/miss status
 def display_addr_refs(refs, ref_statuses):
 
-    # Display table header for the table of addresses
-    print()
-    print(ADDR_ROW_FORMAT_STR.format(*ADDR_COL_NAMES))
-    print_table_separator()
+    table = Table(
+        num_cols=len(REF_COL_NAMES), width=TABLE_WIDTH, alignment='right')
+    table.header[:] = REF_COL_NAMES
 
     for ref, ref_status in zip(refs, ref_statuses):
 
@@ -252,13 +247,15 @@ def display_addr_refs(refs, ref_statuses):
             ref_index = 'n/a'
 
         # Display data for each address as a row in the table
-        print(ADDR_ROW_FORMAT_STR.format(
+        table.rows.append((
             ref.word_addr,
             prettify_bin_addr(ref.bin_addr, MIN_BITS_PER_GROUP),
             prettify_bin_addr(ref.tag, MIN_BITS_PER_GROUP),
             prettify_bin_addr(ref_index, MIN_BITS_PER_GROUP),
             prettify_bin_addr(ref_offset, MIN_BITS_PER_GROUP),
             ref_status))
+
+    print(table)
 
 
 # Displays the contents of the given cache as nicely-formatted table
