@@ -113,6 +113,12 @@ def test_get_consecutive_words_4_word():
         [20, 21, 22, 23])
 
 
+def test_ref_status_str():
+    """RefStatus enum members should display correct string values"""
+    nose.assert_equal(str(sim.RefStatus.hit), 'HIT')
+    nose.assert_equal(str(sim.RefStatus.miss), 'miss')
+
+
 class TestIsHit(object):
     """is_hit should behave correctly in all cases"""
 
