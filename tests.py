@@ -60,6 +60,12 @@ def test_get_tag_5_bit():
         '10110')
 
 
+def test_get_tag_0_bit():
+    """get_tag should return None if no bits are allocated to a tag"""
+    nose.assert_is_none(
+        sim.get_tag('10110100', num_tag_bits=0))
+
+
 def test_get_index_2_bit():
     """get_index should return correct 2 index bits for an address"""
     nose.assert_equal(
@@ -68,10 +74,9 @@ def test_get_index_2_bit():
 
 
 def test_get_index_0_bit():
-    """get_index should return '0' if no bits are allocated to an index"""
-    nose.assert_equal(
-        sim.get_index('11111111', num_offset_bits=1, num_index_bits=0),
-        '0')
+    """get_index should return None if no bits are allocated to an index"""
+    nose.assert_is_none(
+        sim.get_index('11111111', num_offset_bits=1, num_index_bits=0))
 
 
 def test_get_offset_2_bit():
@@ -82,10 +87,9 @@ def test_get_offset_2_bit():
 
 
 def test_get_offset_0_bit():
-    """get_offset should return '0' if no bits are allocated to an offset"""
-    nose.assert_equal(
-        sim.get_offset('10110100', num_offset_bits=0),
-        '0')
+    """get_offset should return None if no bits are allocated to an offset"""
+    nose.assert_is_none(
+        sim.get_offset('10110100', num_offset_bits=0))
 
 
 def test_get_consecutive_words_1_word():

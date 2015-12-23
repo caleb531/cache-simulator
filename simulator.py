@@ -3,6 +3,7 @@
 import argparse
 import math
 import shutil
+from enum import Enum
 
 
 # The character-width of all displayed tables
@@ -20,20 +21,19 @@ MIN_BITS_PER_GROUP = 3
 
 
 # Retrieves the binary address of a certain length for a base-10 word address
-def get_bin_addr(word_addr, num_addr_bits):
+def get_bin_addr(word_addr, num_addr_bits=None):
 
     # Strip the '0b' prefix included in the binary string returned by bin()
     bin_num = bin(word_addr)[2:]
-    # Pad binary address with zeroes if too short
-    bin_addr = ('0' * (num_addr_bits - len(bin_num))) + bin_num
-    return bin_addr
+    if num_addr_bits is None:
+        return bin_num
+    else:
+        # Pad binary address with zeroes if too short
+        bin_addr = ('0' * (num_addr_bits - len(bin_num))) + bin_num
+        return bin_addr
 
 
 # Formats the given binary address by inserting spaces to improve readability
-# e.g. 0101010101010101 => 0101 0101 0101 0101
-#      010101010101     => 010 101 010 101
-#      010101010101010  => 010 1010 1010 1010
-#      01010            => 01010
 def prettify_bin_addr(bin_addr, min_bits_per_group):
 
     mid = len(bin_addr) // 2
@@ -53,7 +53,11 @@ def prettify_bin_addr(bin_addr, min_bits_per_group):
 def get_tag(bin_addr, num_tag_bits):
 
     end = num_tag_bits
-    return bin_addr[:end]
+    tag = bin_addr[:end]
+    if len(tag) != 0:
+        return tag
+    else:
+        return None
 
 
 # Retrieves the index used to group blocks in the cache
@@ -64,10 +68,10 @@ def get_index(bin_addr, num_offset_bits, num_index_bits):
     index = bin_addr[start:end]
     # Ensure that the index is at least one bit (in case it needs to be used);
     # this allows entries to be indexed correctly for fully associative caches
-    if len(index) == 0:
-        return '0'
-    else:
+    if len(index) != 0:
         return index
+    else:
+        return None
 
 
 # Retrieves the word offset used to select a word in the data pointed to by the
@@ -77,17 +81,43 @@ def get_offset(bin_addr, num_offset_bits):
     start = len(bin_addr) - num_offset_bits
     offset = bin_addr[start:]
     # Ensure that the offset has at least one bit (in case it needs to be used)
-    if len(offset) == 0:
-        return '0'
-    else:
+    if len(offset) != 0:
         return offset
+    else:
+        return None
 
 
-# Get all consecutive words for the given word address (including itself)
+# Retrieves all consecutive words for the given word address (including itself)
 def get_consecutive_words(word_addr, num_words_per_block):
 
     offset = word_addr % num_words_per_block
     return [(word_addr - offset + i) for i in range(num_words_per_block)]
+
+
+# An enum representing the cache status of a reference (i.e. hit or miss)
+class RefStatus(Enum):
+
+    miss = 0
+    hit = 1
+
+    # Define how reference statuses are displayed in simulation results
+    def __str__(self):
+        if self.value == RefStatus.hit.value:
+            return 'HIT'
+        else:
+            return 'miss'
+
+
+# An address reference consisting of the address and all of its components
+class Reference(object):
+
+    def __init__(self, word_addr, num_addr_bits,
+                 num_offset_bits, num_index_bits, num_tag_bits):
+        self.word_addr = word_addr
+        self.bin_addr = get_bin_addr(self.word_addr, num_addr_bits)
+        self.offset = get_offset(self.bin_addr, num_offset_bits)
+        self.index = get_index(self.bin_addr, num_offset_bits, num_index_bits)
+        self.tag = get_tag(self.bin_addr, num_tag_bits)
 
 
 # Returns True if a block at the given index and tag exists in the cache,
@@ -107,9 +137,9 @@ def is_hit(cache, addr_index, addr_tag):
 def set_block(cache, recently_used_addrs, replacement_policy,
               num_blocks_per_set, addr_index, new_entry):
 
-    # Create set in cache if it doesn't exist
-    if addr_index not in cache:
-        cache[addr_index] = []
+    # Place all cache entries in a single set if cache is fully associative
+    if addr_index is None:
+        addr_index = '0'
     blocks = cache[addr_index]
     # Replace MRU or LRU entry if number of blocks in set exceeds the limit
     if len(blocks) == num_blocks_per_set:
@@ -130,6 +160,105 @@ def set_block(cache, recently_used_addrs, replacement_policy,
 def print_table_separator():
 
     print('-' * TABLE_WIDTH)
+
+
+# Retrieves a list of address references for use by simulator
+def get_addr_refs(word_addrs, num_addr_bits,
+                  num_offset_bits, num_index_bits, num_tag_bits):
+
+    refs = []
+    for word_addr in word_addrs:
+
+        ref = Reference(
+            word_addr, num_addr_bits, num_offset_bits,
+            num_index_bits, num_tag_bits)
+        refs.append(ref)
+
+    return refs
+
+
+# Initializes the reference cache with a fixed number of sets
+def create_cache(num_sets, num_index_bits):
+
+    cache = {}
+    for i in range(num_sets):
+        index = get_bin_addr(i, num_index_bits)
+        cache[index] = []
+    return cache
+
+
+# Runs the cache simulation by displaying address data as they are read and
+# displaying the final cache contents
+def read_refs_into_cache(num_sets, num_blocks_per_set, num_index_bits,
+                         num_words_per_block, replacement_policy, refs):
+
+    cache = create_cache(num_sets, num_index_bits)
+
+    recently_used_addrs = []
+    ref_statuses = []
+
+    for ref in refs:
+
+        # The index and tag (not the offset) uniquely identify each address
+        addr_id = (ref.index, ref.tag)
+        # Add every retrieved address to the list of recently-used addresses
+        if addr_id in recently_used_addrs:
+            recently_used_addrs.remove(addr_id)
+        recently_used_addrs.append(addr_id)
+
+        # Determine the Hit/Miss value for this address to display in the table
+        if is_hit(cache, ref.index, ref.tag):
+            # Give emphasis to hits in contrast to misses
+            ref_status = RefStatus.hit
+        else:
+            ref_status = RefStatus.miss
+            # Create entry dictionary containing tag and data for this address
+            entry = {
+                'tag': ref.tag,
+                'data': get_consecutive_words(
+                    ref.word_addr, num_words_per_block)
+            }
+            set_block(
+                cache=cache,
+                recently_used_addrs=recently_used_addrs,
+                replacement_policy=replacement_policy,
+                num_blocks_per_set=num_blocks_per_set,
+                addr_index=ref.index,
+                new_entry=entry)
+
+        ref_statuses.append(ref_status)
+
+    return cache, ref_statuses
+
+
+# Displays details for each address reference, including its hit/miss status
+def display_addr_refs(refs, ref_statuses):
+
+    # Display table header for the table of addresses
+    print()
+    print(ADDR_ROW_FORMAT_STR.format(*ADDR_COL_NAMES))
+    print_table_separator()
+
+    for ref, ref_status in zip(refs, ref_statuses):
+
+        if ref.offset is not None:
+            ref_offset = ref.offset
+        else:
+            ref_offset = 'n/a'
+
+        if ref.index is not None:
+            ref_index = ref.index
+        else:
+            ref_index = 'n/a'
+
+        # Display data for each address as a row in the table
+        print(ADDR_ROW_FORMAT_STR.format(
+            ref.word_addr,
+            prettify_bin_addr(ref.bin_addr, MIN_BITS_PER_GROUP),
+            prettify_bin_addr(ref.tag, MIN_BITS_PER_GROUP),
+            prettify_bin_addr(ref_index, MIN_BITS_PER_GROUP),
+            prettify_bin_addr(ref_offset, MIN_BITS_PER_GROUP),
+            ref_status))
 
 
 # Displays the contents of the given cache as nicely-formatted table
@@ -160,8 +289,7 @@ def display_cache(cache):
     print(cache_row_format_str.format(*block_list_strs))
 
 
-# Runs the cache simulation by displaying address data as they are read and
-# displaying the final cache contents
+# Run the entire cache simulation
 def run_simulation(num_blocks_per_set, num_words_per_block, cache_size,
                    replacement_policy, num_addr_bits, word_addrs):
 
@@ -176,66 +304,15 @@ def run_simulation(num_blocks_per_set, num_words_per_block, cache_size,
     num_index_bits = int(math.log2(num_sets))
     num_tag_bits = num_addr_bits - num_index_bits - num_offset_bits
 
-    cache = {}
-    recently_used_addrs = []
+    refs = get_addr_refs(
+        word_addrs, num_addr_bits,
+        num_offset_bits, num_index_bits, num_tag_bits)
 
-    # Display table header for the table of addresses
-    print()
-    print(ADDR_ROW_FORMAT_STR.format(*ADDR_COL_NAMES))
-    print_table_separator()
+    cache, ref_statuses = read_refs_into_cache(
+        num_sets, num_blocks_per_set, num_index_bits,
+        num_words_per_block, replacement_policy, refs)
 
-    for word_addr in word_addrs:
-
-        # Compute additional ddress data
-        bin_addr = get_bin_addr(word_addr, num_addr_bits)
-        addr_index = get_index(bin_addr, num_offset_bits, num_index_bits)
-        addr_offset = get_offset(bin_addr, num_offset_bits)
-        addr_tag = get_tag(bin_addr, num_tag_bits)
-
-        # The index and tag (not the offset) uniquely identify each address
-        addr_id = (addr_index, addr_tag)
-        # Add every retrieved address to the list of recently-used addresses
-        if addr_id in recently_used_addrs:
-            recently_used_addrs.remove(addr_id)
-        recently_used_addrs.append(addr_id)
-
-        # Determine the Hit/Miss value for this address to display in the table
-        if is_hit(cache, addr_index, addr_tag):
-            # Give emphasis to hits in contrast to misses
-            addr_hm = 'HIT'
-        else:
-            addr_hm = 'miss'
-            # Create entry dictionary containing tag and data for this address
-            entry = {
-                'tag': addr_tag,
-                'data': get_consecutive_words(
-                    word_addr, num_words_per_block)
-            }
-            set_block(
-                cache=cache,
-                recently_used_addrs=recently_used_addrs,
-                replacement_policy=replacement_policy,
-                num_blocks_per_set=num_blocks_per_set,
-                addr_index=addr_index,
-                new_entry=entry)
-
-        # Replace bottom values for offset/index with human-readable values for
-        # display in address table
-        if num_offset_bits == 0:
-            addr_offset = 'n/a'
-        if num_index_bits == 0:
-            addr_index = 'n/a'
-
-        # Display data for each address as a row in the table
-        print(ADDR_ROW_FORMAT_STR.format(
-            word_addr,
-            prettify_bin_addr(bin_addr, MIN_BITS_PER_GROUP),
-            prettify_bin_addr(addr_tag, MIN_BITS_PER_GROUP),
-            prettify_bin_addr(addr_index, MIN_BITS_PER_GROUP),
-            prettify_bin_addr(addr_offset, MIN_BITS_PER_GROUP),
-            addr_hm))
-
-    # Print newline before/after displaying cache table for better readability
+    display_addr_refs(refs, ref_statuses)
     print()
     display_cache(cache)
     print()
