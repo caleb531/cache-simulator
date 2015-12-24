@@ -236,20 +236,20 @@ def display_addr_refs(refs, ref_statuses):
 
     for ref, ref_status in zip(refs, ref_statuses):
 
-        if ref.offset is not None:
-            ref_offset = ref.offset
+        if ref.tag is not None:
+            ref_tag = ref.tag
         else:
-            ref_offset = 'n/a'
+            ref_tag = 'n/a'
 
         if ref.index is not None:
             ref_index = ref.index
         else:
             ref_index = 'n/a'
 
-        if ref.tag is not None:
-            ref_tag = ref.tag
+        if ref.offset is not None:
+            ref_offset = ref.offset
         else:
-            ref_tag = 'n/a'
+            ref_offset = 'n/a'
 
         # Display data for each address as a row in the table
         table.rows.append((
