@@ -349,7 +349,7 @@ def parse_cli_args():
     parser.add_argument(
         '--num-addr-bits',
         type=int,
-        default=4,
+        default=1,
         help='the number of bits in each given word address')
 
     parser.add_argument(
