@@ -246,11 +246,16 @@ def display_addr_refs(refs, ref_statuses):
         else:
             ref_index = 'n/a'
 
+        if ref.tag is not None:
+            ref_tag = ref.tag
+        else:
+            ref_tag = 'n/a'
+
         # Display data for each address as a row in the table
         table.rows.append((
             ref.word_addr,
             prettify_bin_addr(ref.bin_addr, MIN_BITS_PER_GROUP),
-            prettify_bin_addr(ref.tag, MIN_BITS_PER_GROUP),
+            prettify_bin_addr(ref_tag, MIN_BITS_PER_GROUP),
             prettify_bin_addr(ref_index, MIN_BITS_PER_GROUP),
             prettify_bin_addr(ref_offset, MIN_BITS_PER_GROUP),
             ref_status))

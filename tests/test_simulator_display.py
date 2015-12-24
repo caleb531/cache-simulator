@@ -35,6 +35,21 @@ def test_display_addr_refs():
             '1'.rjust(col_width), 'HIT'.rjust(col_width)))
 
 
+def test_display_addr_refs_no_tag():
+    """should display n/a for tag when there are no tag bits"""
+    refs = sim.get_addr_refs(
+        word_addrs=WORD_ADDRS, num_addr_bits=2,
+        num_tag_bits=0, num_index_bits=1, num_offset_bits=1)
+    ref_statuses = ['miss', 'miss', 'miss', 'miss']
+    out = io.StringIO()
+    with contextlib.redirect_stdout(out):
+        sim.display_addr_refs(refs, ref_statuses)
+    table_output = out.getvalue()
+    nose.assert_regexp_matches(
+        table_output, r'\s*{}\s*{}\s*{}'.format(
+            '\d\d', 'n/a', '\d'))
+
+
 def test_display_addr_refs_no_index():
     """should display n/a for index when there are no index bits"""
     refs = sim.get_addr_refs(
