@@ -3,6 +3,9 @@
 *Copyright 2015 Caleb Evans*  
 *Released under the MIT license*
 
+[![Build Status](https://travis-ci.org/caleb531/cache-simulator.svg?branch=master)](https://travis-ci.org/caleb531/cache-simulator)
+[![Coverage Status](https://coveralls.io/repos/caleb531/cache-simulator/badge.svg?branch=master)](https://coveralls.io/r/caleb531/cache-simulator?branch=master)
+
 This program simulates a processor cache for the MIPS instruction set architecture. It can simulate all three fundamental caching schemes: direct-mapped, *n*-way set associative, and fully associative.
 
 The program must be run from the command line and requires Python 3 to run. Executing the program will run the simulation and print an ASCII table containing the details for each supplied word address, as well as the final contents of the cache.
