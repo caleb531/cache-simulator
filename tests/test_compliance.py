@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import glob
 import nose.tools as nose
@@ -19,8 +19,8 @@ def test_pep8():
 def test_complexity():
     file_paths = glob.iglob('*/*.py')
     for file_path in file_paths:
-        with open(file_path, 'r') as file:
-            blocks = radon.cc_visit(file.read())
+        with open(file_path, 'r') as file_obj:
+            blocks = radon.cc_visit(file_obj.read())
         for block in blocks:
             test_doc = '{} ({}) should have a low cyclomatic complexity score'
             test_complexity.__doc__ = test_doc.format(

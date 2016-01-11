@@ -20,12 +20,12 @@ MIN_BITS_PER_GROUP = 3
 def get_bin_addr(word_addr, num_addr_bits=None):
 
     # Strip the '0b' prefix included in the binary string returned by bin()
-    bin_num = bin(word_addr)[2:]
+    bin_addr = bin(word_addr)[2:]
     if num_addr_bits is None:
-        return bin_num
+        return bin_addr
     else:
         # Pad binary address with zeroes if too short
-        bin_addr = ('0' * (num_addr_bits - len(bin_num))) + bin_num
+        bin_addr = ('0' * (num_addr_bits - len(bin_addr))) + bin_addr
         return bin_addr
 
 
@@ -36,13 +36,13 @@ def prettify_bin_addr(bin_addr, min_bits_per_group):
 
     if mid < min_bits_per_group:
         # Return binary string immediately if bisecting the binary string
-        # produces a binary string which is too short
+        # produces a substring which is too short
         return bin_addr
     else:
         # Otherwise, bisect binary string and separate halves with a space
-        first = prettify_bin_addr(bin_addr[:mid], min_bits_per_group)
-        last = prettify_bin_addr(bin_addr[mid:], min_bits_per_group)
-        return ' '.join((first, last))
+        left = prettify_bin_addr(bin_addr[:mid], min_bits_per_group)
+        right = prettify_bin_addr(bin_addr[mid:], min_bits_per_group)
+        return ' '.join((left, right))
 
 
 # Retrieves the tag used to distinguish cache entries with the same index
@@ -62,8 +62,6 @@ def get_index(bin_addr, num_offset_bits, num_index_bits):
     start = len(bin_addr) - num_offset_bits - num_index_bits
     end = len(bin_addr) - num_offset_bits
     index = bin_addr[start:end]
-    # Ensure that the index is at least one bit (in case it needs to be used);
-    # this allows entries to be indexed correctly for fully associative caches
     if len(index) != 0:
         return index
     else:
@@ -76,7 +74,6 @@ def get_offset(bin_addr, num_offset_bits):
 
     start = len(bin_addr) - num_offset_bits
     offset = bin_addr[start:]
-    # Ensure that the offset has at least one bit (in case it needs to be used)
     if len(offset) != 0:
         return offset
     else:
