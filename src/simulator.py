@@ -25,7 +25,7 @@ def get_bin_addr(word_addr, num_addr_bits=None):
         return bin_addr
     else:
         # Pad binary address with zeroes if too short
-        bin_addr = ('0' * (num_addr_bits - len(bin_addr))) + bin_addr
+        bin_addr = bin_addr.zfill(num_addr_bits)
         return bin_addr
 
 
