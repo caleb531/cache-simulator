@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import nose.tools as nose
-import src.simulator as sim
+import cachesimulator.simulator as sim
 
 
 def test_get_bin_addr_unpadded():

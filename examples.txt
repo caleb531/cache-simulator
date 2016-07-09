@@ -1,7 +1,7 @@
 # Example simulations
 
 # Direct-mapped (LRU; 1 word per block)
-./src/simulator.py --cache-size 4 --num-blocks-per-set 1 --num-words-per-block 1 --word-addrs 0 8 0 6 8
+cache-simulator --cache-size 4 --num-blocks-per-set 1 --num-words-per-block 1 --word-addrs 0 8 0 6 8
 
      WordAddr      BinAddr          Tag        Index       Offset     Hit/Miss
 --------------------------------------------------------------------------------
@@ -18,7 +18,7 @@
          8                                       6
 
 # 2-way set associative (LRU; 1 word per block)
-./src/simulator.py --cache-size 4 --num-blocks-per-set 2 --num-words-per-block 1 --word-addrs 0 8 0 6 8
+cache-simulator --cache-size 4 --num-blocks-per-set 2 --num-words-per-block 1 --word-addrs 0 8 0 6 8
 
      WordAddr      BinAddr          Tag        Index       Offset     Hit/Miss
 --------------------------------------------------------------------------------
@@ -35,7 +35,7 @@
                   8 6
 
 # Fully associative (LRU; 1 word per block)
-./src/simulator.py --cache-size 4 --num-blocks-per-set 4 --num-words-per-block 1 --word-addrs 0 8 0 6 8
+cache-simulator --cache-size 4 --num-blocks-per-set 4 --num-words-per-block 1 --word-addrs 0 8 0 6 8
 
      WordAddr      BinAddr          Tag        Index       Offset     Hit/Miss
 --------------------------------------------------------------------------------
@@ -50,7 +50,7 @@
                                      0 8 6
 
 # Direct-mapped (LRU; 2 words per block)
-./src/simulator.py --cache-size 16 --num-blocks-per-set 1 --num-words-per-block 2 --word-addrs 3 180 43 2 191 88 190 14 181 44 186 253
+cache-simulator --cache-size 16 --num-blocks-per-set 1 --num-words-per-block 2 --word-addrs 3 180 43 2 191 88 190 14 181 44 186 253
 
      WordAddr      BinAddr          Tag        Index       Offset     Hit/Miss
 --------------------------------------------------------------------------------
@@ -74,7 +74,7 @@
              2,3     180,181              88,89    186,187   252,253    14,15
 
 # 3-way set associative (LRU; 2 words per block)
-./src/simulator.py --cache-size 24 --num-blocks-per-set 3 --num-words-per-block 2 --word-addrs 3 180 43 2 191 88 190 14 181 44 186 253
+cache-simulator --cache-size 24 --num-blocks-per-set 3 --num-words-per-block 2 --word-addrs 3 180 43 2 191 88 190 14 181 44 186 253
 
      WordAddr      BinAddr          Tag        Index       Offset     Hit/Miss
 --------------------------------------------------------------------------------
@@ -98,7 +98,7 @@
        88,89         2,3 42,43 186,187  180,181 44,45 252,253   190,191 14,15
 
 # Fully associative (LRU; 2 words per block)
-./src/simulator.py --cache-size 8 --num-blocks-per-set 4 --num-words-per-block 2 --word-addrs 3 180 43 2 191 88 190 14 181 44 186 253
+cache-simulator --cache-size 8 --num-blocks-per-set 4 --num-words-per-block 2 --word-addrs 3 180 43 2 191 88 190 14 181 44 186 253
 
      WordAddr      BinAddr          Tag        Index       Offset     Hit/Miss
 --------------------------------------------------------------------------------
@@ -120,7 +120,7 @@
                          180,181 44,45 252,253 186,187
 
 # Fully associative (MRU; 2 words per block)
-./src/simulator.py --cache-size 8 --num-blocks-per-set 4 --num-words-per-block 2 --replacement-policy mru --word-addrs 3 180 43 2 191 88 190 14 181 44 186 253
+cache-simulator --cache-size 8 --num-blocks-per-set 4 --num-words-per-block 2 --replacement-policy mru --word-addrs 3 180 43 2 191 88 190 14 181 44 186 253
 
      WordAddr      BinAddr          Tag        Index       Offset     Hit/Miss
 --------------------------------------------------------------------------------

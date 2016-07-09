@@ -2,7 +2,7 @@
 
 import copy
 import nose.tools as nose
-import src.simulator as sim
+import cachesimulator.simulator as sim
 
 
 class TestSetBlock(object):

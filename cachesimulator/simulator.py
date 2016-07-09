@@ -4,7 +4,7 @@ import argparse
 import math
 import shutil
 from enum import Enum
-from table import Table
+from cachesimulator.table import Table
 
 
 # The character-width of all displayed tables

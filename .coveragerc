@@ -14,5 +14,5 @@ exclude_lines =
 
 # Only check coverage for source files
 include =
-    src/simulator.py
-    src/table.py
+    cachesimulator/simulator.py
+    cachesimulator/table.py
