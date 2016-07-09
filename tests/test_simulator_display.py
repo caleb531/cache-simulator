@@ -3,7 +3,7 @@
 import contextlib
 import io
 import nose.tools as nose
-import src.simulator as sim
+import cachesimulator.simulator as sim
 
 
 WORD_ADDRS = [43, 14, 253, 186]

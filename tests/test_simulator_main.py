@@ -3,7 +3,7 @@
 import contextlib
 import io
 import nose.tools as nose
-import src.simulator as sim
+import cachesimulator.simulator as sim
 from unittest.mock import patch
 
 
