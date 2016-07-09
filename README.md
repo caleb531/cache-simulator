@@ -12,6 +12,14 @@ The program must be run from the command line and requires Python 3 to run. Exec
 
 To see example input and output, see `examples.txt`.
 
+## Installing
+
+You can install Cache Simulator via pip (ideally globally):
+
+```
+pip install cache-simulator
+```
+
 ## Command-line parameters
 
 ### Required parameters
