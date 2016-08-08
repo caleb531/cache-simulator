@@ -7,9 +7,6 @@ from enum import Enum
 from cachesimulator.table import Table
 
 
-# The character-width of all displayed tables
-# Attempt to fit table to size of terminal window, otherwise use default of 80
-TABLE_WIDTH = shutil.get_terminal_size((80, 20)).columns
 # The names of all reference table columns
 REF_COL_NAMES = ('WordAddr', 'BinAddr', 'Tag', 'Index', 'Offset', 'Hit/Miss')
 # The minimum number of bits required per group in a prettified binary string
@@ -225,10 +222,10 @@ def read_refs_into_cache(num_sets, num_blocks_per_set, num_index_bits,
 
 
 # Displays details for each address reference, including its hit/miss status
-def display_addr_refs(refs, ref_statuses):
+def display_addr_refs(refs, ref_statuses, table_width):
 
     table = Table(
-        num_cols=len(REF_COL_NAMES), width=TABLE_WIDTH, alignment='right')
+        num_cols=len(REF_COL_NAMES), width=table_width, alignment='right')
     table.header[:] = REF_COL_NAMES
 
     for ref, ref_status in zip(refs, ref_statuses):
@@ -261,10 +258,10 @@ def display_addr_refs(refs, ref_statuses):
 
 
 # Displays the contents of the given cache as nicely-formatted table
-def display_cache(cache):
+def display_cache(cache, table_width):
 
     table = Table(
-        num_cols=len(cache), width=TABLE_WIDTH, alignment='center')
+        num_cols=len(cache), width=table_width, alignment='center')
     table.title = 'Cache'
 
     cache_set_names = sorted(cache.keys())
@@ -306,10 +303,14 @@ def run_simulation(num_blocks_per_set, num_words_per_block, cache_size,
         num_sets, num_blocks_per_set, num_index_bits,
         num_words_per_block, replacement_policy, refs)
 
+    # The character-width of all displayed tables
+    # Attempt to fit table to terminal width, otherwise use default of 80
+    table_width = shutil.get_terminal_size((80, 20)).columns
+
     print()
-    display_addr_refs(refs, ref_statuses)
+    display_addr_refs(refs, ref_statuses, table_width)
     print()
-    display_cache(cache)
+    display_cache(cache, table_width)
     print()
 
 

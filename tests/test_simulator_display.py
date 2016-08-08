@@ -18,7 +18,7 @@ def test_display_addr_refs():
     ref_statuses = ['miss', 'miss', 'HIT', 'miss']
     out = io.StringIO()
     with contextlib.redirect_stdout(out):
-        sim.display_addr_refs(refs, ref_statuses)
+        sim.display_addr_refs(refs, ref_statuses, table_width=TABLE_WIDTH)
     table_output = out.getvalue()
     num_cols = 6
     col_width = TABLE_WIDTH // num_cols
@@ -43,7 +43,7 @@ def test_display_addr_refs_no_tag():
     ref_statuses = ['miss', 'miss', 'miss', 'miss']
     out = io.StringIO()
     with contextlib.redirect_stdout(out):
-        sim.display_addr_refs(refs, ref_statuses)
+        sim.display_addr_refs(refs, ref_statuses, table_width=TABLE_WIDTH)
     table_output = out.getvalue()
     nose.assert_regexp_matches(
         table_output, r'\s*{}\s*{}\s*{}'.format(
@@ -58,7 +58,7 @@ def test_display_addr_refs_no_index():
     ref_statuses = ['miss', 'miss', 'miss', 'miss']
     out = io.StringIO()
     with contextlib.redirect_stdout(out):
-        sim.display_addr_refs(refs, ref_statuses)
+        sim.display_addr_refs(refs, ref_statuses, table_width=TABLE_WIDTH)
     table_output = out.getvalue()
     nose.assert_regexp_matches(
         table_output, r'\s*{}\s*{}\s*{}'.format(
@@ -73,7 +73,7 @@ def test_display_addr_refs_no_offset():
     ref_statuses = ['miss'] * 12
     out = io.StringIO()
     with contextlib.redirect_stdout(out):
-        sim.display_addr_refs(refs, ref_statuses)
+        sim.display_addr_refs(refs, ref_statuses, table_width=TABLE_WIDTH)
     table_output = out.getvalue()
     nose.assert_regexp_matches(
         table_output, r'\s*{}\s*{}\s*{}'.format(
@@ -92,7 +92,7 @@ def test_display_cache():
                 {'tag': '0000', 'data': [2, 3]},
                 {'tag': '0010', 'data': [42, 43]},
             ]
-        })
+        }, table_width=TABLE_WIDTH)
     table_output = out.getvalue()
     num_cols = 2
     col_width = TABLE_WIDTH // num_cols
@@ -121,7 +121,7 @@ def test_display_cache_fully_assoc():
                 {'tag': '0000001', 'data': [2, 3]},
                 {'tag': '1111110', 'data': [252, 253]}
             ]
-        })
+        }, table_width=TABLE_WIDTH)
     table_output = out.getvalue()
     nose.assert_regexp_matches(
         table_output, '{}\n{}'.format(
