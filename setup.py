@@ -16,7 +16,7 @@ def get_long_description():
 
 setup(
     name='cache-simulator',
-    version='1.0.0',
+    version='1.0.1',
     description='A processor cache simulator for the MIPS ISA',
     long_description=get_long_description(),
     url='https://github.com/caleb531/cache-simulator',
