@@ -11,6 +11,8 @@ from cachesimulator.table import Table
 REF_COL_NAMES = ('WordAddr', 'BinAddr', 'Tag', 'Index', 'Offset', 'Hit/Miss')
 # The minimum number of bits required per group in a prettified binary string
 MIN_BITS_PER_GROUP = 3
+# The default column width of the displayed results table
+DEFAULT_TABLE_WIDTH = 80
 
 
 # Retrieves the binary address of a certain length for a base-10 word address
@@ -305,7 +307,8 @@ def run_simulation(num_blocks_per_set, num_words_per_block, cache_size,
 
     # The character-width of all displayed tables
     # Attempt to fit table to terminal width, otherwise use default of 80
-    table_width = shutil.get_terminal_size((80, 20)).columns
+    table_width = max((shutil.get_terminal_size(
+        (DEFAULT_TABLE_WIDTH, 20)).columns, DEFAULT_TABLE_WIDTH))
 
     print()
     display_addr_refs(refs, ref_statuses, table_width)
