@@ -10,7 +10,7 @@ class BinaryAddress(str):
 
         if word_addr is not None:
             return str.__new__(
-                cls, bin(word_addr.value)[2:].zfill(num_addr_bits))
+                cls, bin(word_addr)[2:].zfill(num_addr_bits))
         else:
             return str.__new__(cls, bin_addr)
 
