@@ -1,42 +1,22 @@
 #!/usr/bin/env python3
 
-import copy
-
 from cachesimulator.bin_addr import BinaryAddress
 from cachesimulator.word_addr import WordAddress
 
 
-class Cache(object):
+class Cache(dict):
 
     # Initializes the reference cache with a fixed number of sets
     def __init__(self, cache=None, num_sets=None, num_index_bits=None):
 
         if cache is not None:
-            self.map = cache
+            self.update(cache)
         else:
             self.map = {}
             for i in range(num_sets):
                 index = BinaryAddress(
                     word_addr=WordAddress(i), num_addr_bits=num_index_bits)
-                self.map[index] = []
-
-    def __eq__(self, other):
-        return self.map == other
-
-    def __len__(self):
-        return len(self.map)
-
-    def __getitem__(self, key):
-        return self.map[key]
-
-    def __contains__(self, value):
-        return value in self.map
-
-    def __deepcopy__(self, memodict={}):
-        return copy.deepcopy(self.map)
-
-    def keys(self):
-        return self.map.keys()
+                self[index] = []
 
     # Returns True if a block at the given index and tag exists in the cache,
     # indicating a hit; returns False otherwise, indicating a miss
