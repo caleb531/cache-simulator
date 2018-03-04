@@ -5,10 +5,10 @@ import math
 import shutil
 from enum import Enum
 
-from cachesimulator.word_addr import WordAddress
 from cachesimulator.bin_addr import BinaryAddress
 from cachesimulator.cache import Cache
 from cachesimulator.table import Table
+from cachesimulator.word_addr import WordAddress
 
 # The names of all reference table columns
 REF_COL_NAMES = ('WordAddr', 'BinAddr', 'Tag', 'Index', 'Offset', 'Hit/Miss')

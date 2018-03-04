@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 
 import nose.tools as nose
-from cachesimulator.cache import Cache
+
 import cachesimulator.simulator as sim
+from cachesimulator.cache import Cache
 
 
 def test_get_addr_refs():

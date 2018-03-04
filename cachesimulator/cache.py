@@ -2,8 +2,8 @@
 
 import copy
 
-from cachesimulator.word_addr import WordAddress
 from cachesimulator.bin_addr import BinaryAddress
+from cachesimulator.word_addr import WordAddress
 
 
 class Cache(object):

@@ -2,9 +2,10 @@
 
 import contextlib
 import io
-import nose.tools as nose
-import cachesimulator.simulator as sim
 
+import nose.tools as nose
+
+import cachesimulator.simulator as sim
 
 WORD_ADDRS = [43, 14, 253, 186]
 TABLE_WIDTH = 80

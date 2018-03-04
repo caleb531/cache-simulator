@@ -2,9 +2,11 @@
 
 import contextlib
 import io
-import nose.tools as nose
-import cachesimulator.simulator as sim
 from unittest.mock import patch
+
+import nose.tools as nose
+
+import cachesimulator.simulator as sim
 
 
 @patch('sys.argv', [

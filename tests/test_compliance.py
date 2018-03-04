@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import glob
+
 import nose.tools as nose
 import pycodestyle
 import radon.complexity as radon

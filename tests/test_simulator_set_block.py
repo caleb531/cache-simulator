@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import copy
+
 import nose.tools as nose
 
 from cachesimulator.cache import Cache
