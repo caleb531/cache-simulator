@@ -1,37 +1,18 @@
 #!/usr/bin/env python3
 
 
-class BinaryAddress(object):
+class BinaryAddress(str):
 
     # Retrieves the binary address of a certain length for a base-10 word
-    # address
-    def __init__(self, bin_addr=None, word_addr=None, num_addr_bits=0):
+    # address; we must define __new__ instead of __init__ because the class we
+    # are inheriting from (str) is an immutable data type
+    def __new__(cls, bin_addr=None, word_addr=None, num_addr_bits=0):
 
         if word_addr is not None:
-            self.value = bin(word_addr.value)[2:].zfill(num_addr_bits)
+            return str.__new__(
+                cls, bin(word_addr.value)[2:].zfill(num_addr_bits))
         else:
-            self.value = bin_addr
-
-    def __repr__(self):
-        return repr(self.value)
-
-    def __format__(self, formatstr):
-        return str.__format__(self.value, formatstr)
-
-    def __hash__(self):
-        return hash(self.value)
-
-    def __len__(self):
-        return len(self.value)
-
-    def __getitem__(self, key):
-        return self.value[key]
-
-    def __eq__(self, other):
-        return self.value == other
-
-    def __lt__(self, other):
-        return self.value < other.value
+            return str.__new__(cls, bin_addr)
 
     @classmethod
     def prettify(cls, bin_addr, min_bits_per_group):
@@ -52,7 +33,7 @@ class BinaryAddress(object):
     def get_tag(self, num_tag_bits):
 
         end = num_tag_bits
-        tag = self.value[:end]
+        tag = self[:end]
         if len(tag) != 0:
             return tag
         else:
@@ -61,9 +42,9 @@ class BinaryAddress(object):
     # Retrieves the index used to group blocks in the cache
     def get_index(self, num_offset_bits, num_index_bits):
 
-        start = len(self.value) - num_offset_bits - num_index_bits
-        end = len(self.value) - num_offset_bits
-        index = self.value[start:end]
+        start = len(self) - num_offset_bits - num_index_bits
+        end = len(self) - num_offset_bits
+        index = self[start:end]
         if len(index) != 0:
             return index
         else:
@@ -73,8 +54,8 @@ class BinaryAddress(object):
     # the given binary address
     def get_offset(self, num_offset_bits):
 
-        start = len(self.value) - num_offset_bits
-        offset = self.value[start:]
+        start = len(self) - num_offset_bits
+        offset = self[start:]
         if len(offset) != 0:
             return offset
         else:
