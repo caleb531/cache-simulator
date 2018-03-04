@@ -7,7 +7,7 @@ from cachesimulator.word_addr import WordAddress
 class Cache(dict):
 
     # Initializes the reference cache with a fixed number of sets
-    def __init__(self, cache=None, num_sets=None, num_index_bits=None):
+    def __init__(self, cache=None, num_sets=None, num_index_bits=0):
 
         if cache is not None:
             self.update(cache)
