@@ -12,7 +12,6 @@ class Cache(dict):
         if cache is not None:
             self.update(cache)
         else:
-            self.map = {}
             for i in range(num_sets):
                 index = BinaryAddress(
                     word_addr=WordAddress(i), num_addr_bits=num_index_bits)
