@@ -9,10 +9,10 @@ class BinaryAddress(str):
     def __new__(cls, bin_addr=None, word_addr=None, num_addr_bits=0):
 
         if word_addr is not None:
-            return str.__new__(
+            return super().__new__(
                 cls, bin(word_addr)[2:].zfill(num_addr_bits))
         else:
-            return str.__new__(cls, bin_addr)
+            return super().__new__(cls, bin_addr)
 
     @classmethod
     def prettify(cls, bin_addr, min_bits_per_group):
