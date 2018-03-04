@@ -86,4 +86,5 @@ class TestSetBlock(object):
             num_blocks_per_set=4,
             addr_index='010',
             new_entry=self.new_entry)
+        nose.assert_is_not(self.cache, original_cache)
         nose.assert_equal(self.cache, original_cache)
