@@ -26,7 +26,7 @@ class RefStatus(Enum):
 
     # Define how reference statuses are displayed in simulation results
     def __str__(self):
-        if self.value == RefStatus.hit.value:
+        if self.value == self.hit.value:
             return 'HIT'
         else:
             return 'miss'
