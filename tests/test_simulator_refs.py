@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import nose.tools as nose
+from cachesimulator.cache import Cache
 import cachesimulator.simulator as sim
 
 
@@ -10,6 +11,7 @@ def test_get_addr_refs():
     refs = sim.get_addr_refs(
         word_addrs=word_addrs, num_addr_bits=8,
         num_tag_bits=4, num_index_bits=3, num_offset_bits=1)
+    print(refs)
     ref = refs[1]
     nose.assert_equal(len(refs), len(word_addrs))
     nose.assert_equal(ref.word_addr, 180)
@@ -38,7 +40,7 @@ class TestReadRefs(object):
         cache, ref_statuses = sim.read_refs_into_cache(
             refs=refs, num_sets=4, num_blocks_per_set=1,
             num_words_per_block=1, num_index_bits=2, replacement_policy='lru')
-        nose.assert_dict_equal(cache, {
+        nose.assert_equal(cache, {
             '00': [
                 {'tag': '10', 'data': [8]}
             ],
@@ -58,7 +60,7 @@ class TestReadRefs(object):
         cache, ref_statuses = sim.read_refs_into_cache(
             refs=refs, num_sets=4, num_blocks_per_set=3,
             num_words_per_block=2, num_index_bits=2, replacement_policy='lru')
-        nose.assert_dict_equal(cache, {
+        nose.assert_equal(cache, {
             '00': [
                 {'tag': '01011', 'data': [88, 89]}
             ],
@@ -87,7 +89,7 @@ class TestReadRefs(object):
         cache, ref_statuses = sim.read_refs_into_cache(
             refs=refs, num_sets=1, num_blocks_per_set=4,
             num_words_per_block=2, num_index_bits=0, replacement_policy='lru')
-        nose.assert_dict_equal(cache, {
+        nose.assert_equal(cache, {
             '0': [
                 {'tag': '1011010', 'data': [180, 181]},
                 {'tag': '0010110', 'data': [44, 45]},
@@ -105,12 +107,12 @@ class TestReadRefs(object):
         cache, ref_statuses = sim.read_refs_into_cache(
             refs=refs, num_sets=1, num_blocks_per_set=4,
             num_words_per_block=2, num_index_bits=0, replacement_policy='mru')
-        nose.assert_dict_equal(cache, {
+        nose.assert_equal(cache, Cache({
             '0': [
                 {'tag': '0000001', 'data': [2, 3]},
                 {'tag': '1111110', 'data': [252, 253]},
                 {'tag': '0010101', 'data': [42, 43]},
                 {'tag': '0000111', 'data': [14, 15]}
             ]
-        })
+        }))
         nose.assert_set_equal(self.get_hits(ref_statuses), {3, 8})
