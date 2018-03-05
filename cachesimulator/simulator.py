@@ -249,13 +249,7 @@ def parse_cli_args():
 def main():
 
     cli_args = parse_cli_args()
-    run_simulation(
-        num_blocks_per_set=cli_args.num_blocks_per_set,
-        num_words_per_block=cli_args.num_words_per_block,
-        cache_size=cli_args.cache_size,
-        replacement_policy=cli_args.replacement_policy,
-        num_addr_bits=cli_args.num_addr_bits,
-        word_addrs=cli_args.word_addrs)
+    run_simulation(**vars(cli_args))
 
 
 if __name__ == '__main__':
