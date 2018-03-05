@@ -33,7 +33,7 @@ class RefStatus(Enum):
 
 
 # An address reference consisting of the address and all of its components
-class Reference(object):
+class Reference(dict):
 
     def __init__(self, word_addr, num_addr_bits,
                  num_offset_bits, num_index_bits, num_tag_bits):
@@ -43,9 +43,6 @@ class Reference(object):
         self.offset = self.bin_addr.get_offset(num_offset_bits)
         self.index = self.bin_addr.get_index(num_offset_bits, num_index_bits)
         self.tag = self.bin_addr.get_tag(num_tag_bits)
-
-    def __repr__(self):
-        return repr(self.__dict__)
 
 
 # Retrieves a list of address references for use by simulator
