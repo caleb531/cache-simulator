@@ -7,9 +7,9 @@ from cachesimulator.cache import Cache
 
 
 def test_ref_status_str():
-    """RefStatus enum members should display correct string values"""
-    nose.assert_equal(str(sim.RefStatus.hit), 'HIT')
-    nose.assert_equal(str(sim.RefStatus.miss), 'miss')
+    """cache status enum members should display correct string values"""
+    nose.assert_equal(str(sim.ReferenceCacheStatus.hit), 'HIT')
+    nose.assert_equal(str(sim.ReferenceCacheStatus.miss), 'miss')
 
 
 class TestIsHit(object):

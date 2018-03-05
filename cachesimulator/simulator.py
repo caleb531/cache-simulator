@@ -3,12 +3,11 @@
 import argparse
 import math
 import shutil
-from enum import Enum
 
 from cachesimulator.bin_addr import BinaryAddress
 from cachesimulator.cache import Cache
+from cachesimulator.reference import Reference, ReferenceCacheStatus
 from cachesimulator.table import Table
-from cachesimulator.word_addr import WordAddress
 
 # The names of all reference table columns
 REF_COL_NAMES = ('WordAddr', 'BinAddr', 'Tag', 'Index', 'Offset', 'Hit/Miss')
@@ -16,33 +15,6 @@ REF_COL_NAMES = ('WordAddr', 'BinAddr', 'Tag', 'Index', 'Offset', 'Hit/Miss')
 MIN_BITS_PER_GROUP = 3
 # The default column width of the displayed results table
 DEFAULT_TABLE_WIDTH = 80
-
-
-# An enum representing the cache status of a reference (i.e. hit or miss)
-class RefStatus(Enum):
-
-    miss = 0
-    hit = 1
-
-    # Define how reference statuses are displayed in simulation results
-    def __str__(self):
-        if self.value == RefStatus.hit.value:
-            return 'HIT'
-        else:
-            return 'miss'
-
-
-# An address reference consisting of the address and all of its components
-class Reference(dict):
-
-    def __init__(self, word_addr, num_addr_bits,
-                 num_offset_bits, num_index_bits, num_tag_bits):
-        self.word_addr = WordAddress(word_addr)
-        self.bin_addr = BinaryAddress(
-            word_addr=self.word_addr, num_addr_bits=num_addr_bits)
-        self.offset = self.bin_addr.get_offset(num_offset_bits)
-        self.index = self.bin_addr.get_index(num_offset_bits, num_index_bits)
-        self.tag = self.bin_addr.get_tag(num_tag_bits)
 
 
 # Retrieves a list of address references for use by simulator
@@ -83,9 +55,9 @@ def read_refs_into_cache(num_sets, num_blocks_per_set, num_index_bits,
         # Determine the Hit/Miss value for this address to display in the table
         if cache.is_hit(ref.index, ref.tag):
             # Give emphasis to hits in contrast to misses
-            ref_status = RefStatus.hit
+            ref_status = ReferenceCacheStatus.hit
         else:
-            ref_status = RefStatus.miss
+            ref_status = ReferenceCacheStatus.miss
             # Create entry dictionary containing tag and data for this address
             entry = {
                 'tag': ref.tag,
