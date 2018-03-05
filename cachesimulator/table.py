@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
 
-import sys
-
 
 # A class for displaying ASCII tables
 class Table(object):
