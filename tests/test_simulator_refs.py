@@ -12,7 +12,6 @@ def test_get_addr_refs():
     refs = sim.get_addr_refs(
         word_addrs=word_addrs, num_addr_bits=8,
         num_tag_bits=4, num_index_bits=3, num_offset_bits=1)
-    print(refs)
     ref = refs[1]
     nose.assert_equal(len(refs), len(word_addrs))
     nose.assert_equal(ref.word_addr, 180)
