@@ -50,7 +50,7 @@ class TestReadRefs(object):
             ],
             '11': []
         })
-        nose.assert_set_equal(self.get_hits(ref_statuses), set())
+        nose.assert_equal(self.get_hits(ref_statuses), set())
 
     def test_read_refs_into_cache_set_associative_lru(self):
         """read_refs_into_cache should work for set associative LRU cache"""
@@ -79,7 +79,7 @@ class TestReadRefs(object):
                 {'tag': '00001', 'data': [14, 15]},
             ]
         })
-        nose.assert_set_equal(self.get_hits(ref_statuses), {3, 6, 8})
+        nose.assert_equal(self.get_hits(ref_statuses), {3, 6, 8})
 
     def test_read_refs_into_cache_fully_associative_lru(self):
         """read_refs_into_cache should work for fully associative LRU cache"""
@@ -97,7 +97,7 @@ class TestReadRefs(object):
                 {'tag': '1011101', 'data': [186, 187]}
             ]
         })
-        nose.assert_set_equal(self.get_hits(ref_statuses), {3, 6})
+        nose.assert_equal(self.get_hits(ref_statuses), {3, 6})
 
     def test_read_refs_into_cache_fully_associative_mru(self):
         """read_refs_into_cache should work for fully associative MRU cache"""
@@ -115,4 +115,4 @@ class TestReadRefs(object):
                 {'tag': '0000111', 'data': [14, 15]}
             ]
         }))
-        nose.assert_set_equal(self.get_hits(ref_statuses), {3, 8})
+        nose.assert_equal(self.get_hits(ref_statuses), {3, 8})
