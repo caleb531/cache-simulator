@@ -2,13 +2,14 @@
 
 import nose.tools as nose
 
-import cachesimulator.simulator as sim
 from cachesimulator.cache import Cache
+from cachesimulator.simulator import Simulator
 
 
 def test_get_addr_refs():
     """get_addr_refs should return correct reference data"""
     word_addrs = [3, 180, 44, 253]
+    sim = Simulator()
     refs = sim.get_addr_refs(
         word_addrs=word_addrs, num_addr_bits=8,
         num_tag_bits=4, num_index_bits=3, num_offset_bits=1)
@@ -34,6 +35,7 @@ class TestReadRefs(object):
     def test_read_refs_into_cache_direct_mapped_lru(self):
         """read_refs_into_cache should work for direct-mapped LRU cache"""
         word_addrs = [0, 8, 0, 6, 8]
+        sim = Simulator()
         refs = sim.get_addr_refs(
             word_addrs=word_addrs, num_addr_bits=4,
             num_tag_bits=2, num_index_bits=2, num_offset_bits=0)
@@ -54,6 +56,7 @@ class TestReadRefs(object):
 
     def test_read_refs_into_cache_set_associative_lru(self):
         """read_refs_into_cache should work for set associative LRU cache"""
+        sim = Simulator()
         refs = sim.get_addr_refs(
             word_addrs=TestReadRefs.WORD_ADDRS, num_addr_bits=8,
             num_tag_bits=5, num_index_bits=2, num_offset_bits=1)
@@ -83,6 +86,7 @@ class TestReadRefs(object):
 
     def test_read_refs_into_cache_fully_associative_lru(self):
         """read_refs_into_cache should work for fully associative LRU cache"""
+        sim = Simulator()
         refs = sim.get_addr_refs(
             word_addrs=TestReadRefs.WORD_ADDRS, num_addr_bits=8,
             num_tag_bits=7, num_index_bits=0, num_offset_bits=1)
@@ -101,6 +105,7 @@ class TestReadRefs(object):
 
     def test_read_refs_into_cache_fully_associative_mru(self):
         """read_refs_into_cache should work for fully associative MRU cache"""
+        sim = Simulator()
         refs = sim.get_addr_refs(
             word_addrs=TestReadRefs.WORD_ADDRS, num_addr_bits=8,
             num_tag_bits=7, num_index_bits=0, num_offset_bits=1)

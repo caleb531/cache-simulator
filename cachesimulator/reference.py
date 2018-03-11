@@ -7,7 +7,7 @@ from cachesimulator.word_addr import WordAddress
 
 
 # An address reference consisting of the address and all of its components
-class Reference(dict):
+class Reference(object):
 
     def __init__(self, word_addr, num_addr_bits,
                  num_offset_bits, num_index_bits, num_tag_bits):
@@ -17,6 +17,14 @@ class Reference(dict):
         self.offset = self.bin_addr.get_offset(num_offset_bits)
         self.index = self.bin_addr.get_index(num_offset_bits, num_index_bits)
         self.tag = self.bin_addr.get_tag(num_tag_bits)
+
+    # Return a lightweight entry to store in the cache
+    def get_cache_entry(self, num_words_per_block):
+        return {
+            'tag': self.tag,
+            'data': self.word_addr.get_consecutive_words(
+                num_words_per_block)
+        }
 
 
 # An enum representing the cache status of a reference (i.e. hit or miss)

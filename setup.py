@@ -28,7 +28,7 @@ setup(
     install_requires=[],
     entry_points={
         'console_scripts': [
-            'cache-simulator=cachesimulator.simulator:main'
+            'cache-simulator=cachesimulator.__main__:main'
         ]
     }
 )
