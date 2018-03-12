@@ -8,7 +8,7 @@
 
 This program simulates a processor cache for the MIPS instruction set architecture. It can simulate all three fundamental caching schemes: direct-mapped, *n*-way set associative, and fully associative.
 
-The program must be run from the command line and requires Python 3 to run. Executing the program will run the simulation and print an ASCII table containing the details for each supplied word address, as well as the final contents of the cache.
+The program must be run from the command line and requires Python 3.4+ to run. Executing the program will run the simulation and print an ASCII table containing the details for each supplied word address, as well as the final contents of the cache.
 
 To see example input and output, see `examples.txt`.
 
