@@ -2,14 +2,14 @@
 
 import nose.tools as nose
 
-import cachesimulator.simulator as sim
 from cachesimulator.cache import Cache
+from cachesimulator.reference import ReferenceCacheStatus
 
 
 def test_ref_status_str():
     """cache status enum members should display correct string values"""
-    nose.assert_equal(str(sim.ReferenceCacheStatus.hit), 'HIT')
-    nose.assert_equal(str(sim.ReferenceCacheStatus.miss), 'miss')
+    nose.assert_equal(str(ReferenceCacheStatus.hit), 'HIT')
+    nose.assert_equal(str(ReferenceCacheStatus.miss), 'miss')
 
 
 class TestIsHit(object):

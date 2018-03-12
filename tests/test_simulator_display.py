@@ -11,16 +11,22 @@ WORD_ADDRS = [43, 14, 253, 186]
 TABLE_WIDTH = 80
 
 
+def apply_cache_statuses_to_refs(cache_statuses, refs):
+
+    for cache_status, ref in zip(cache_statuses, refs):
+        ref.cache_status = cache_status
+
+
 def test_display_addr_refs():
     """should display table of address references"""
     sim = Simulator()
     refs = sim.get_addr_refs(
         word_addrs=WORD_ADDRS, num_addr_bits=8,
         num_tag_bits=5, num_index_bits=2, num_offset_bits=1)
-    ref_statuses = ['miss', 'miss', 'HIT', 'miss']
+    apply_cache_statuses_to_refs(['miss', 'miss', 'HIT', 'miss'], refs)
     out = io.StringIO()
     with contextlib.redirect_stdout(out):
-        sim.display_addr_refs(refs, ref_statuses, table_width=TABLE_WIDTH)
+        sim.display_addr_refs(refs, table_width=TABLE_WIDTH)
     table_output = out.getvalue()
     num_cols = 6
     col_width = TABLE_WIDTH // num_cols
@@ -43,10 +49,10 @@ def test_display_addr_refs_no_tag():
     refs = sim.get_addr_refs(
         word_addrs=WORD_ADDRS, num_addr_bits=2,
         num_tag_bits=0, num_index_bits=1, num_offset_bits=1)
-    ref_statuses = ['miss', 'miss', 'miss', 'miss']
+    apply_cache_statuses_to_refs(['miss', 'miss', 'miss', 'miss'], refs)
     out = io.StringIO()
     with contextlib.redirect_stdout(out):
-        sim.display_addr_refs(refs, ref_statuses, table_width=TABLE_WIDTH)
+        sim.display_addr_refs(refs, table_width=TABLE_WIDTH)
     table_output = out.getvalue()
     nose.assert_regexp_matches(
         table_output, r'\s*{}\s*{}\s*{}'.format(
@@ -59,10 +65,10 @@ def test_display_addr_refs_no_index():
     refs = sim.get_addr_refs(
         word_addrs=WORD_ADDRS, num_addr_bits=8,
         num_tag_bits=7, num_index_bits=0, num_offset_bits=1)
-    ref_statuses = ['miss', 'miss', 'miss', 'miss']
+    apply_cache_statuses_to_refs(['miss', 'miss', 'miss', 'miss'], refs)
     out = io.StringIO()
     with contextlib.redirect_stdout(out):
-        sim.display_addr_refs(refs, ref_statuses, table_width=TABLE_WIDTH)
+        sim.display_addr_refs(refs, table_width=TABLE_WIDTH)
     table_output = out.getvalue()
     nose.assert_regexp_matches(
         table_output, r'\s*{}\s*{}\s*{}'.format(
@@ -75,10 +81,10 @@ def test_display_addr_refs_no_offset():
     refs = sim.get_addr_refs(
         word_addrs=WORD_ADDRS, num_addr_bits=8,
         num_tag_bits=4, num_index_bits=4, num_offset_bits=0)
-    ref_statuses = ['miss'] * 12
+    apply_cache_statuses_to_refs(['miss'] * 12, refs)
     out = io.StringIO()
     with contextlib.redirect_stdout(out):
-        sim.display_addr_refs(refs, ref_statuses, table_width=TABLE_WIDTH)
+        sim.display_addr_refs(refs, table_width=TABLE_WIDTH)
     table_output = out.getvalue()
     nose.assert_regexp_matches(
         table_output, r'\s*{}\s*{}\s*{}'.format(

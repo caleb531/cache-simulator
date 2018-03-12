@@ -3,6 +3,7 @@
 import nose.tools as nose
 
 from cachesimulator.cache import Cache
+from cachesimulator.reference import ReferenceCacheStatus
 from cachesimulator.simulator import Simulator
 
 
@@ -27,10 +28,11 @@ class TestReadRefs(object):
 
     WORD_ADDRS = [3, 180, 43, 2, 191, 88, 190, 14, 181, 44, 186, 253]
 
-    def get_hits(self, ref_statuses):
+    def get_hits(self, refs):
         """retrieves all indices where hits occur in a list of ref statuses"""
         return {
-            i for i, status in enumerate(ref_statuses) if status.value == 1}
+            i for i, ref in enumerate(refs)
+            if ref.cache_status == ReferenceCacheStatus.hit}
 
     def test_read_refs_into_cache_direct_mapped_lru(self):
         """read_refs_into_cache should work for direct-mapped LRU cache"""
@@ -39,9 +41,10 @@ class TestReadRefs(object):
         refs = sim.get_addr_refs(
             word_addrs=word_addrs, num_addr_bits=4,
             num_tag_bits=2, num_index_bits=2, num_offset_bits=0)
-        cache, ref_statuses = sim.read_refs_into_cache(
-            refs=refs, num_sets=4, num_blocks_per_set=1,
-            num_words_per_block=1, num_index_bits=2, replacement_policy='lru')
+        cache = Cache(num_sets=4, num_index_bits=2)
+        cache.read_refs(
+            refs=refs, num_blocks_per_set=1,
+            num_words_per_block=1, replacement_policy='lru')
         nose.assert_equal(cache, {
             '00': [
                 {'tag': '10', 'data': [8]}
@@ -52,7 +55,7 @@ class TestReadRefs(object):
             ],
             '11': []
         })
-        nose.assert_equal(self.get_hits(ref_statuses), set())
+        nose.assert_equal(self.get_hits(refs), set())
 
     def test_read_refs_into_cache_set_associative_lru(self):
         """read_refs_into_cache should work for set associative LRU cache"""
@@ -60,9 +63,10 @@ class TestReadRefs(object):
         refs = sim.get_addr_refs(
             word_addrs=TestReadRefs.WORD_ADDRS, num_addr_bits=8,
             num_tag_bits=5, num_index_bits=2, num_offset_bits=1)
-        cache, ref_statuses = sim.read_refs_into_cache(
-            refs=refs, num_sets=4, num_blocks_per_set=3,
-            num_words_per_block=2, num_index_bits=2, replacement_policy='lru')
+        cache = Cache(num_sets=4, num_index_bits=2)
+        cache.read_refs(
+            refs=refs, num_blocks_per_set=3,
+            num_words_per_block=2, replacement_policy='lru')
         nose.assert_equal(cache, {
             '00': [
                 {'tag': '01011', 'data': [88, 89]}
@@ -82,7 +86,7 @@ class TestReadRefs(object):
                 {'tag': '00001', 'data': [14, 15]},
             ]
         })
-        nose.assert_equal(self.get_hits(ref_statuses), {3, 6, 8})
+        nose.assert_equal(self.get_hits(refs), {3, 6, 8})
 
     def test_read_refs_into_cache_fully_associative_lru(self):
         """read_refs_into_cache should work for fully associative LRU cache"""
@@ -90,9 +94,10 @@ class TestReadRefs(object):
         refs = sim.get_addr_refs(
             word_addrs=TestReadRefs.WORD_ADDRS, num_addr_bits=8,
             num_tag_bits=7, num_index_bits=0, num_offset_bits=1)
-        cache, ref_statuses = sim.read_refs_into_cache(
-            refs=refs, num_sets=1, num_blocks_per_set=4,
-            num_words_per_block=2, num_index_bits=0, replacement_policy='lru')
+        cache = Cache(num_sets=1, num_index_bits=0)
+        cache.read_refs(
+            refs=refs, num_blocks_per_set=4,
+            num_words_per_block=2, replacement_policy='lru')
         nose.assert_equal(cache, {
             '0': [
                 {'tag': '1011010', 'data': [180, 181]},
@@ -101,7 +106,7 @@ class TestReadRefs(object):
                 {'tag': '1011101', 'data': [186, 187]}
             ]
         })
-        nose.assert_equal(self.get_hits(ref_statuses), {3, 6})
+        nose.assert_equal(self.get_hits(refs), {3, 6})
 
     def test_read_refs_into_cache_fully_associative_mru(self):
         """read_refs_into_cache should work for fully associative MRU cache"""
@@ -109,9 +114,10 @@ class TestReadRefs(object):
         refs = sim.get_addr_refs(
             word_addrs=TestReadRefs.WORD_ADDRS, num_addr_bits=8,
             num_tag_bits=7, num_index_bits=0, num_offset_bits=1)
-        cache, ref_statuses = sim.read_refs_into_cache(
-            refs=refs, num_sets=1, num_blocks_per_set=4,
-            num_words_per_block=2, num_index_bits=0, replacement_policy='mru')
+        cache = Cache(num_sets=1, num_index_bits=0)
+        cache.read_refs(
+            refs=refs, num_blocks_per_set=4,
+            num_words_per_block=2, replacement_policy='mru')
         nose.assert_equal(cache, Cache({
             '0': [
                 {'tag': '0000001', 'data': [2, 3]},
@@ -120,4 +126,4 @@ class TestReadRefs(object):
                 {'tag': '0000111', 'data': [14, 15]}
             ]
         }))
-        nose.assert_equal(self.get_hits(ref_statuses), {3, 8})
+        nose.assert_equal(self.get_hits(refs), {3, 8})

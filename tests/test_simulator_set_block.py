@@ -30,8 +30,8 @@ class TestSetBlock(object):
         """set_block should add new block if index set is empty"""
         self.reset()
         self.cache['010'][:] = []
+        self.cache.recently_used_addrs = []
         self.cache.set_block(
-            recently_used_addrs=[],
             replacement_policy='lru',
             num_blocks_per_set=4,
             addr_index='010',
@@ -43,8 +43,8 @@ class TestSetBlock(object):
     def test_lru_replacement(self):
         """set_block should perform LRU replacement as needed"""
         self.reset()
+        self.cache.recently_used_addrs = self.recently_used_addrs
         self.cache.set_block(
-            recently_used_addrs=self.recently_used_addrs,
             replacement_policy='lru',
             num_blocks_per_set=4,
             addr_index='010',
@@ -61,8 +61,8 @@ class TestSetBlock(object):
     def test_mru_replacement(self):
         """set_block should optionally perform MRU replacement as needed"""
         self.reset()
+        self.cache.recently_used_addrs = self.recently_used_addrs
         self.cache.set_block(
-            recently_used_addrs=self.recently_used_addrs,
             replacement_policy='mru',
             num_blocks_per_set=4,
             addr_index='010',
@@ -80,8 +80,8 @@ class TestSetBlock(object):
         """set_block should not perform replacement if there are no recents"""
         self.reset()
         original_cache = copy.deepcopy(self.cache)
+        self.cache.recently_used_addrs = []
         self.cache.set_block(
-            recently_used_addrs=[],
             replacement_policy='lru',
             num_blocks_per_set=4,
             addr_index='010',

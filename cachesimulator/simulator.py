@@ -5,7 +5,7 @@ import shutil
 
 from cachesimulator.bin_addr import BinaryAddress
 from cachesimulator.cache import Cache
-from cachesimulator.reference import Reference, ReferenceCacheStatus
+from cachesimulator.reference import Reference
 from cachesimulator.table import Table
 
 # The names of all reference table columns
@@ -18,12 +18,6 @@ DEFAULT_TABLE_WIDTH = 80
 
 class Simulator(object):
 
-    def __init__(self):
-
-        # A list of recently ordered addresses, ordered from least-recently
-        # used to most
-        self.recently_used_addrs = []
-
     # Retrieves a list of address references for use by simulator
     def get_addr_refs(self, word_addrs, num_addr_bits,
                       num_offset_bits, num_index_bits, num_tag_bits):
@@ -32,55 +26,15 @@ class Simulator(object):
                 word_addr, num_addr_bits, num_offset_bits,
                 num_index_bits, num_tag_bits) for word_addr in word_addrs]
 
-    # Every time we see an address, place it at the top of the
-    # list of recently-seen addresses
-    def mark_ref_as_last_seen(self, ref):
-
-        # The index and tag (not the offset) uniquely identify each address
-        addr_id = (ref.index, ref.tag)
-        if addr_id in self.recently_used_addrs:
-            self.recently_used_addrs.remove(addr_id)
-        self.recently_used_addrs.append(addr_id)
-
-    # Simulate the cache by reading the given address references into it
-    def read_refs_into_cache(self, num_sets, num_blocks_per_set,
-                             num_index_bits, num_words_per_block,
-                             replacement_policy, refs):
-
-        cache = Cache(
-            num_sets=num_sets,
-            num_index_bits=num_index_bits)
-        ref_statuses = []
-
-        for ref in refs:
-            self.mark_ref_as_last_seen(ref)
-
-            # Record if the reference is already in the cache or not
-            if cache.is_hit(ref.index, ref.tag):
-                # Give emphasis to hits in contrast to misses
-                ref_status = ReferenceCacheStatus.hit
-            else:
-                ref_status = ReferenceCacheStatus.miss
-                cache.set_block(
-                    recently_used_addrs=self.recently_used_addrs,
-                    replacement_policy=replacement_policy,
-                    num_blocks_per_set=num_blocks_per_set,
-                    addr_index=ref.index,
-                    new_entry=ref.get_cache_entry(num_words_per_block))
-
-            ref_statuses.append(ref_status)
-
-        return cache, ref_statuses
-
     # Displays details for each address reference, including its hit/miss
     # status
-    def display_addr_refs(self, refs, ref_statuses, table_width):
+    def display_addr_refs(self, refs, table_width):
 
         table = Table(
             num_cols=len(REF_COL_NAMES), width=table_width, alignment='right')
         table.header[:] = REF_COL_NAMES
 
-        for ref, ref_status in zip(refs, ref_statuses):
+        for ref in refs:
 
             if ref.tag is not None:
                 ref_tag = ref.tag
@@ -104,7 +58,7 @@ class Simulator(object):
                 BinaryAddress.prettify(ref_tag, MIN_BITS_PER_GROUP),
                 BinaryAddress.prettify(ref_index, MIN_BITS_PER_GROUP),
                 BinaryAddress.prettify(ref_offset, MIN_BITS_PER_GROUP),
-                ref_status))
+                ref.cache_status))
 
         print(table)
 
@@ -152,9 +106,13 @@ class Simulator(object):
             word_addrs, num_addr_bits,
             num_offset_bits, num_index_bits, num_tag_bits)
 
-        cache, ref_statuses = self.read_refs_into_cache(
-            num_sets, num_blocks_per_set, num_index_bits,
-            num_words_per_block, replacement_policy, refs)
+        cache = Cache(
+            num_sets=num_sets,
+            num_index_bits=num_index_bits)
+
+        cache.read_refs(
+            num_blocks_per_set, num_words_per_block,
+            replacement_policy, refs)
 
         # The character-width of all displayed tables
         # Attempt to fit table to terminal width, otherwise use default of 80
@@ -162,7 +120,7 @@ class Simulator(object):
             (DEFAULT_TABLE_WIDTH, 20)).columns, DEFAULT_TABLE_WIDTH))
 
         print()
-        self.display_addr_refs(refs, ref_statuses, table_width)
+        self.display_addr_refs(refs, table_width)
         print()
         self.display_cache(cache, table_width)
         print()
