@@ -18,7 +18,7 @@ class Reference(object):
         self.offset = self.bin_addr.get_offset(num_offset_bits)
         self.index = self.bin_addr.get_index(num_offset_bits, num_index_bits)
         self.tag = self.bin_addr.get_tag(num_tag_bits)
-        self.cache_status = ReferenceCacheStatus.miss
+        self.cache_status = None
 
     def __str__(self):
         return str(OrderedDict(sorted(self.__dict__.items())))
