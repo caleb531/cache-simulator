@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 
+from collections import OrderedDict
+
 import nose.tools as nose
 
 from cachesimulator.cache import Cache
-from cachesimulator.reference import ReferenceCacheStatus
+from cachesimulator.reference import Reference, ReferenceCacheStatus
 from cachesimulator.simulator import Simulator
 
 
@@ -127,3 +129,10 @@ class TestReadRefs(object):
             ]
         }))
         nose.assert_equal(self.get_hits(refs), {3, 8})
+
+
+def test_get_ref_str():
+    """should return string representation of Reference"""
+    ref = Reference(word_addr=180, num_addr_bits=8,
+                    num_tag_bits=4, num_index_bits=3, num_offset_bits=1)
+    nose.assert_equal(str(ref), str(OrderedDict(sorted(ref.__dict__.items()))))

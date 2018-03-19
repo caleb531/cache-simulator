@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from collections import OrderedDict
 from enum import Enum
 
 from cachesimulator.bin_addr import BinaryAddress
@@ -18,6 +19,11 @@ class Reference(object):
         self.index = self.bin_addr.get_index(num_offset_bits, num_index_bits)
         self.tag = self.bin_addr.get_tag(num_tag_bits)
         self.cache_status = ReferenceCacheStatus.miss
+
+    def __str__(self):
+        return str(OrderedDict(sorted(self.__dict__.items())))
+
+    __repr__ = __str__
 
     # Return a lightweight entry to store in the cache
     def get_cache_entry(self, num_words_per_block):
