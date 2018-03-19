@@ -46,3 +46,5 @@ class ReferenceCacheStatus(Enum):
             return 'HIT'
         else:
             return 'miss'
+
+    __repr__ = __str__
