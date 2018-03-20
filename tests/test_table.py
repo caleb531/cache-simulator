@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import nose.tools as nose
+
 from cachesimulator.table import Table
 
 

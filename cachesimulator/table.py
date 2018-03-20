@@ -43,6 +43,6 @@ class Table(object):
             table_strs.append(self.get_separator())
 
         for row in self.rows:
-            table_strs.append(cell_format_str.format(*row))
+            table_strs.append(cell_format_str.format(*map(str, row)))
 
         return '\n'.join(table_strs)
