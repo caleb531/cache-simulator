@@ -50,10 +50,23 @@ class Cache(dict):
 
         return False
 
+    # Iterate through the recently-used entries in reverse order for MRU
+    def replace_block(self, blocks, replacement_policy, addr_index, new_entry):
+        if replacement_policy == 'mru':
+            recently_used_addrs = reversed(self.recently_used_addrs)
+        else:
+            recently_used_addrs = self.recently_used_addrs
+        # Replace the first matching entry with the entry to add
+        for recent_index, recent_tag in recently_used_addrs:
+            for i, block in enumerate(blocks):
+                if (recent_index == addr_index and
+                        block['tag'] == recent_tag):
+                    blocks[i] = new_entry
+                    return
+
     # Adds the given entry to the cache at the given index
     def set_block(self, replacement_policy,
                   num_blocks_per_set, addr_index, new_entry):
-
         # Place all cache entries in a single set if cache is fully associative
         if addr_index is None:
             blocks = self['0']
@@ -61,19 +74,8 @@ class Cache(dict):
             blocks = self[addr_index]
         # Replace MRU or LRU entry if number of blocks in set exceeds the limit
         if len(blocks) == num_blocks_per_set:
-            # Iterate through the recently-used entries in reverse order for
-            # MRU
-            if replacement_policy == 'mru':
-                recently_used_addrs = reversed(self.recently_used_addrs)
-            else:
-                recently_used_addrs = self.recently_used_addrs
-            # Replace the first matching entry with the entry to add
-            for recent_index, recent_tag in recently_used_addrs:
-                for i, block in enumerate(blocks):
-                    if (recent_index == addr_index and
-                            block['tag'] == recent_tag):
-                        blocks[i] = new_entry
-                        return
+            self.replace_block(
+                blocks, replacement_policy, addr_index, new_entry)
         else:
             blocks.append(new_entry)
 
