@@ -9,5 +9,6 @@ install:
   - pip install coveralls
 script:
   - coverage run -m nose
+  - pycodestyle cachesimulator/*.py
 after_success:
   - coveralls
