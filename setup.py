@@ -6,12 +6,8 @@ from setuptools import setup
 
 # Get long description (used on PyPI project page)
 def get_long_description():
-    try:
-        # Use pandoc to create reStructuredText README if possible
-        import pypandoc
-        return pypandoc.convert_file('README.md', 'rst')
-    except Exception:
-        return None
+    with open('README.md', 'r') as readme_file:
+        return readme_file.read()
 
 
 setup(
@@ -19,6 +15,7 @@ setup(
     version='2.0.1',
     description='A processor cache simulator for the MIPS ISA',
     long_description=get_long_description(),
+    long_description_content_type='text/markdown',
     url='https://github.com/caleb531/cache-simulator',
     author='Caleb Evans',
     author_email='caleb@calebevans.me',
