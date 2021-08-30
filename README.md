@@ -3,7 +3,7 @@
 *Copyright 2015-2018 Caleb Evans*  
 *Released under the MIT license*
 
-[![Build Status](https://travis-ci.com/caleb531/cache-simulator.svg?branch=master)](https://travis-ci.com/caleb531/cache-simulator)
+[![Build Status](https://app.travis-ci.com/caleb531/cache-simulator.svg?branch=master)](https://app.travis-ci.com/caleb531/cache-simulator)
 [![Coverage Status](https://coveralls.io/repos/caleb531/cache-simulator/badge.svg?branch=master)](https://coveralls.io/r/caleb531/cache-simulator?branch=master)
 
 This program simulates a processor cache for the MIPS instruction set
