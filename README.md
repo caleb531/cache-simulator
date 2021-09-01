@@ -1,6 +1,6 @@
 # Cache Simulator
 
-*Copyright 2015-2018 Caleb Evans*  
+*Copyright 2015-2021 Caleb Evans*  
 *Released under the MIT license*
 
 [![Build Status](https://app.travis-ci.com/caleb531/cache-simulator.svg?branch=master)](https://app.travis-ci.com/caleb531/cache-simulator)
