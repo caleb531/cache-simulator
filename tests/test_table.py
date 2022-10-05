@@ -1,47 +1,49 @@
 #!/usr/bin/env python3
 
-import nose.tools as nose
+import unittest
 
 from cachesimulator.table import Table
+
+case = unittest.TestCase()
 
 
 def test_init_default():
     """should initialize table with required parameters and default values"""
     table = Table(num_cols=5, width=78)
-    nose.assert_equal(table.num_cols, 5)
-    nose.assert_equal(table.width, 78)
-    nose.assert_equal(table.alignment, 'left')
-    nose.assert_equal(table.title, None)
-    nose.assert_equal(table.header, [])
-    nose.assert_equal(table.rows, [])
+    case.assertEqual(table.num_cols, 5)
+    case.assertEqual(table.width, 78)
+    case.assertEqual(table.alignment, 'left')
+    case.assertEqual(table.title, None)
+    case.assertEqual(table.header, [])
+    case.assertEqual(table.rows, [])
 
 
 def test_init_optional():
     """should initialize table with optional parameters if supplied"""
     table = Table(num_cols=5, width=78, alignment='right', title='Cache')
-    nose.assert_equal(table.num_cols, 5)
-    nose.assert_equal(table.width, 78)
-    nose.assert_equal(table.alignment, 'right')
-    nose.assert_equal(table.title, 'Cache')
+    case.assertEqual(table.num_cols, 5)
+    case.assertEqual(table.width, 78)
+    case.assertEqual(table.alignment, 'right')
+    case.assertEqual(table.title, 'Cache')
 
 
 def test_get_separator():
     """should return the correct ASCII separator string"""
     table = Table(num_cols=5, width=78)
-    nose.assert_equal(table.get_separator(), '-' * 78)
+    case.assertEqual(table.get_separator(), '-' * 78)
 
 
 def test_str_title():
     """should correctly display title"""
     table = Table(num_cols=5, width=12, title='Cache')
-    nose.assert_regexp_matches(
+    case.assertRegexpMatches(
         ''.join(('Cache'.center(12), '\n', ('-' * 12))), str(table))
 
 
 def test_str_no_title():
     """should not display title if not originally supplied"""
     table = Table(num_cols=5, width=12)
-    nose.assert_equal(str(table).strip(), '')
+    case.assertEqual(str(table).strip(), '')
 
 
 class TestAlignment(object):
@@ -55,7 +57,7 @@ class TestAlignment(object):
         table.header = ['First', 'Last']
         table.rows.append(['Bob', 'Smith'])
         table.rows.append(['John', 'Earl'])
-        nose.assert_equal(str(table), '{}{}\n{}\n{}{}\n{}{}'.format(
+        case.assertEqual(str(table), '{}{}\n{}\n{}{}\n{}{}'.format(
             just('First', col_width), just('Last', col_width),
             '-' * table_width,
             just('Bob', col_width), just('Smith', col_width),

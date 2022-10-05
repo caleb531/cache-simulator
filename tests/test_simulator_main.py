@@ -2,11 +2,12 @@
 
 import contextlib
 import io
+import unittest
 from unittest.mock import patch
 
-import nose.tools as nose
-
 import cachesimulator.__main__ as main
+
+case = unittest.TestCase()
 
 
 @patch('sys.argv', [
@@ -18,8 +19,8 @@ def test_main():
     with contextlib.redirect_stdout(out):
         main.main()
     main_output = out.getvalue()
-    nose.assert_regexp_matches(main_output, r'\bWordAddr\b')
-    nose.assert_regexp_matches(main_output, r'\b0110\b')
-    nose.assert_regexp_matches(main_output, r'\bCache')
-    nose.assert_regexp_matches(main_output, r'\b01\b')
-    nose.assert_regexp_matches(main_output, r'\b8\s*6\b')
+    case.assertRegexpMatches(main_output, r'\bWordAddr\b')
+    case.assertRegexpMatches(main_output, r'\b0110\b')
+    case.assertRegexpMatches(main_output, r'\bCache')
+    case.assertRegexpMatches(main_output, r'\b01\b')
+    case.assertRegexpMatches(main_output, r'\b8\s*6\b')

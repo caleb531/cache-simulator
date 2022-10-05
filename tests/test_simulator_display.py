@@ -2,13 +2,14 @@
 
 import contextlib
 import io
-
-import nose.tools as nose
+import unittest
 
 from cachesimulator.simulator import Simulator
 
 WORD_ADDRS = [43, 14, 253, 186]
 TABLE_WIDTH = 80
+
+case = unittest.TestCase()
 
 
 def apply_cache_statuses_to_refs(cache_statuses, refs):
@@ -30,13 +31,13 @@ def test_display_addr_refs():
     table_output = out.getvalue()
     num_cols = 6
     col_width = TABLE_WIDTH // num_cols
-    nose.assert_regexp_matches(
+    case.assertRegexpMatches(
         table_output, r'{}\s*{}\s*{}\s*{}\s*{}\s*{}\n{}'.format(
             'WordAddr'.rjust(col_width), 'BinAddr'.rjust(col_width),
             'Tag'.rjust(col_width), 'Index'.rjust(col_width),
             'Offset'.rjust(col_width), 'Hit/Miss'.rjust(col_width),
             ('-' * TABLE_WIDTH)))
-    nose.assert_regexp_matches(
+    case.assertRegexpMatches(
         table_output, r'{}\s*{}\s*{}\s*{}\s*{}\s*{}'.format(
             '253'.rjust(col_width), '1111 1101'.rjust(col_width),
             '11111'.rjust(col_width), '10'.rjust(col_width),
@@ -54,9 +55,9 @@ def test_display_addr_refs_no_tag():
     with contextlib.redirect_stdout(out):
         sim.display_addr_refs(refs, table_width=TABLE_WIDTH)
     table_output = out.getvalue()
-    nose.assert_regexp_matches(
+    case.assertRegexpMatches(
         table_output, r'\s*{}\s*{}\s*{}'.format(
-            '\d\d', 'n/a', '\d'))
+            r'\d\d', r'n/a', r'\d'))
 
 
 def test_display_addr_refs_no_index():
@@ -70,9 +71,9 @@ def test_display_addr_refs_no_index():
     with contextlib.redirect_stdout(out):
         sim.display_addr_refs(refs, table_width=TABLE_WIDTH)
     table_output = out.getvalue()
-    nose.assert_regexp_matches(
+    case.assertRegexpMatches(
         table_output, r'\s*{}\s*{}\s*{}'.format(
-            'n/a', '\d', 'miss'))
+            r'n/a', r'\d', 'miss'))
 
 
 def test_display_addr_refs_no_offset():
@@ -86,9 +87,9 @@ def test_display_addr_refs_no_offset():
     with contextlib.redirect_stdout(out):
         sim.display_addr_refs(refs, table_width=TABLE_WIDTH)
     table_output = out.getvalue()
-    nose.assert_regexp_matches(
+    case.assertRegexpMatches(
         table_output, r'\s*{}\s*{}\s*{}'.format(
-            '\d\d', 'n/a', 'miss'))
+            r'\d\d', r'n/a', 'miss'))
 
 
 def test_display_cache():
@@ -108,17 +109,17 @@ def test_display_cache():
     table_output = out.getvalue()
     num_cols = 2
     col_width = TABLE_WIDTH // num_cols
-    nose.assert_regexp_matches(
+    case.assertRegexpMatches(
         table_output, '{}\n{}'.format(
             'Cache'.center(TABLE_WIDTH),
             ('-' * TABLE_WIDTH)))
-    nose.assert_equal(
+    case.assertEqual(
         table_output.count('-'), TABLE_WIDTH * 2)
-    nose.assert_regexp_matches(
+    case.assertRegexpMatches(
         table_output, r'{}{}'.format(
             '000'.center(col_width),
             '001'.center(col_width)))
-    nose.assert_regexp_matches(
+    case.assertRegexpMatches(
         table_output, r'{}{}'.format(
             '88,89'.center(col_width),
             '2,3 42,43'.center(col_width)))
@@ -136,11 +137,11 @@ def test_display_cache_fully_assoc():
             ]
         }, table_width=TABLE_WIDTH)
     table_output = out.getvalue()
-    nose.assert_regexp_matches(
+    case.assertRegexpMatches(
         table_output, '{}\n{}'.format(
             'Cache'.center(TABLE_WIDTH),
             ('-' * TABLE_WIDTH)))
-    nose.assert_equal(
+    case.assertEqual(
         table_output.count('-'), TABLE_WIDTH)
-    nose.assert_regexp_matches(
+    case.assertRegexpMatches(
         table_output, '2,3 252,253'.center(TABLE_WIDTH))

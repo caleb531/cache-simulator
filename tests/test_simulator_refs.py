@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 
+import unittest
 from collections import OrderedDict
-
-import nose.tools as nose
 
 from cachesimulator.cache import Cache
 from cachesimulator.reference import Reference, ReferenceCacheStatus
 from cachesimulator.simulator import Simulator
+
+case = unittest.TestCase()
 
 
 def test_get_addr_refs():
@@ -17,12 +18,12 @@ def test_get_addr_refs():
         word_addrs=word_addrs, num_addr_bits=8,
         num_tag_bits=4, num_index_bits=3, num_offset_bits=1)
     ref = refs[1]
-    nose.assert_equal(len(refs), len(word_addrs))
-    nose.assert_equal(ref.word_addr, 180)
-    nose.assert_equal(ref.bin_addr, '10110100')
-    nose.assert_equal(ref.tag, '1011')
-    nose.assert_equal(ref.index, '010')
-    nose.assert_equal(ref.offset, '0')
+    case.assertEqual(len(refs), len(word_addrs))
+    case.assertEqual(ref.word_addr, 180)
+    case.assertEqual(ref.bin_addr, '10110100')
+    case.assertEqual(ref.tag, '1011')
+    case.assertEqual(ref.index, '010')
+    case.assertEqual(ref.offset, '0')
 
 
 class TestReadRefs(object):
@@ -47,7 +48,7 @@ class TestReadRefs(object):
         cache.read_refs(
             refs=refs, num_blocks_per_set=1,
             num_words_per_block=1, replacement_policy='lru')
-        nose.assert_equal(cache, {
+        case.assertEqual(cache, {
             '00': [
                 {'tag': '10', 'data': [8]}
             ],
@@ -57,7 +58,7 @@ class TestReadRefs(object):
             ],
             '11': []
         })
-        nose.assert_equal(self.get_hits(refs), set())
+        case.assertEqual(self.get_hits(refs), set())
 
     def test_read_refs_into_cache_set_associative_lru(self):
         """read_refs_into_cache should work for set associative LRU cache"""
@@ -69,7 +70,7 @@ class TestReadRefs(object):
         cache.read_refs(
             refs=refs, num_blocks_per_set=3,
             num_words_per_block=2, replacement_policy='lru')
-        nose.assert_equal(cache, {
+        case.assertEqual(cache, {
             '00': [
                 {'tag': '01011', 'data': [88, 89]}
             ],
@@ -88,7 +89,7 @@ class TestReadRefs(object):
                 {'tag': '00001', 'data': [14, 15]},
             ]
         })
-        nose.assert_equal(self.get_hits(refs), {3, 6, 8})
+        case.assertEqual(self.get_hits(refs), {3, 6, 8})
 
     def test_read_refs_into_cache_fully_associative_lru(self):
         """read_refs_into_cache should work for fully associative LRU cache"""
@@ -100,7 +101,7 @@ class TestReadRefs(object):
         cache.read_refs(
             refs=refs, num_blocks_per_set=4,
             num_words_per_block=2, replacement_policy='lru')
-        nose.assert_equal(cache, {
+        case.assertEqual(cache, {
             '0': [
                 {'tag': '1011010', 'data': [180, 181]},
                 {'tag': '0010110', 'data': [44, 45]},
@@ -108,7 +109,7 @@ class TestReadRefs(object):
                 {'tag': '1011101', 'data': [186, 187]}
             ]
         })
-        nose.assert_equal(self.get_hits(refs), {3, 6})
+        case.assertEqual(self.get_hits(refs), {3, 6})
 
     def test_read_refs_into_cache_fully_associative_mru(self):
         """read_refs_into_cache should work for fully associative MRU cache"""
@@ -120,7 +121,7 @@ class TestReadRefs(object):
         cache.read_refs(
             refs=refs, num_blocks_per_set=4,
             num_words_per_block=2, replacement_policy='mru')
-        nose.assert_equal(cache, Cache({
+        case.assertEqual(cache, Cache({
             '0': [
                 {'tag': '0000001', 'data': [2, 3]},
                 {'tag': '1111110', 'data': [252, 253]},
@@ -128,11 +129,11 @@ class TestReadRefs(object):
                 {'tag': '0000111', 'data': [14, 15]}
             ]
         }))
-        nose.assert_equal(self.get_hits(refs), {3, 8})
+        case.assertEqual(self.get_hits(refs), {3, 8})
 
 
 def test_get_ref_str():
     """should return string representation of Reference"""
     ref = Reference(word_addr=180, num_addr_bits=8,
                     num_tag_bits=4, num_index_bits=3, num_offset_bits=1)
-    nose.assert_equal(str(ref), str(OrderedDict(sorted(ref.__dict__.items()))))
+    case.assertEqual(str(ref), str(OrderedDict(sorted(ref.__dict__.items()))))

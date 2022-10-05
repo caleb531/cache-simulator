@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 
 import copy
-
-import nose.tools as nose
+import unittest
 
 from cachesimulator.cache import Cache
+
+case = unittest.TestCase()
 
 
 class TestSetBlock(object):
@@ -36,7 +37,7 @@ class TestSetBlock(object):
             num_blocks_per_set=4,
             addr_index='010',
             new_entry=self.new_entry)
-        nose.assert_equal(self.cache, {
+        case.assertEqual(self.cache, {
             '010': [{'tag': '1111'}]
         })
 
@@ -49,7 +50,7 @@ class TestSetBlock(object):
             num_blocks_per_set=4,
             addr_index='010',
             new_entry=self.new_entry)
-        nose.assert_equal(self.cache, {
+        case.assertEqual(self.cache, {
             '010': [
                 {'tag': '1000'},
                 {'tag': '1100'},
@@ -67,7 +68,7 @@ class TestSetBlock(object):
             num_blocks_per_set=4,
             addr_index='010',
             new_entry=self.new_entry)
-        nose.assert_equal(self.cache, {
+        case.assertEqual(self.cache, {
             '010': [
                 {'tag': '1000'},
                 {'tag': '1100'},
@@ -86,5 +87,5 @@ class TestSetBlock(object):
             num_blocks_per_set=4,
             addr_index='010',
             new_entry=self.new_entry)
-        nose.assert_is_not(self.cache, original_cache)
-        nose.assert_equal(self.cache, original_cache)
+        case.assertIsNot(self.cache, original_cache)
+        case.assertEqual(self.cache, original_cache)
