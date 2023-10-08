@@ -19,8 +19,8 @@ def test_main():
     with contextlib.redirect_stdout(out):
         main.main()
     main_output = out.getvalue()
-    case.assertRegexpMatches(main_output, r'\bWordAddr\b')
-    case.assertRegexpMatches(main_output, r'\b0110\b')
-    case.assertRegexpMatches(main_output, r'\bCache')
-    case.assertRegexpMatches(main_output, r'\b01\b')
-    case.assertRegexpMatches(main_output, r'\b8\s*6\b')
+    case.assertRegex(main_output, r'\bWordAddr\b')
+    case.assertRegex(main_output, r'\b0110\b')
+    case.assertRegex(main_output, r'\bCache')
+    case.assertRegex(main_output, r'\b01\b')
+    case.assertRegex(main_output, r'\b8\s*6\b')

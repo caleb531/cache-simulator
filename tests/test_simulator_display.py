@@ -31,13 +31,13 @@ def test_display_addr_refs():
     table_output = out.getvalue()
     num_cols = 6
     col_width = TABLE_WIDTH // num_cols
-    case.assertRegexpMatches(
+    case.assertRegex(
         table_output, r'{}\s*{}\s*{}\s*{}\s*{}\s*{}\n{}'.format(
             'WordAddr'.rjust(col_width), 'BinAddr'.rjust(col_width),
             'Tag'.rjust(col_width), 'Index'.rjust(col_width),
             'Offset'.rjust(col_width), 'Hit/Miss'.rjust(col_width),
             ('-' * TABLE_WIDTH)))
-    case.assertRegexpMatches(
+    case.assertRegex(
         table_output, r'{}\s*{}\s*{}\s*{}\s*{}\s*{}'.format(
             '253'.rjust(col_width), '1111 1101'.rjust(col_width),
             '11111'.rjust(col_width), '10'.rjust(col_width),
@@ -55,7 +55,7 @@ def test_display_addr_refs_no_tag():
     with contextlib.redirect_stdout(out):
         sim.display_addr_refs(refs, table_width=TABLE_WIDTH)
     table_output = out.getvalue()
-    case.assertRegexpMatches(
+    case.assertRegex(
         table_output, r'\s*{}\s*{}\s*{}'.format(
             r'\d\d', r'n/a', r'\d'))
 
@@ -71,7 +71,7 @@ def test_display_addr_refs_no_index():
     with contextlib.redirect_stdout(out):
         sim.display_addr_refs(refs, table_width=TABLE_WIDTH)
     table_output = out.getvalue()
-    case.assertRegexpMatches(
+    case.assertRegex(
         table_output, r'\s*{}\s*{}\s*{}'.format(
             r'n/a', r'\d', 'miss'))
 
@@ -87,7 +87,7 @@ def test_display_addr_refs_no_offset():
     with contextlib.redirect_stdout(out):
         sim.display_addr_refs(refs, table_width=TABLE_WIDTH)
     table_output = out.getvalue()
-    case.assertRegexpMatches(
+    case.assertRegex(
         table_output, r'\s*{}\s*{}\s*{}'.format(
             r'\d\d', r'n/a', 'miss'))
 
@@ -109,17 +109,17 @@ def test_display_cache():
     table_output = out.getvalue()
     num_cols = 2
     col_width = TABLE_WIDTH // num_cols
-    case.assertRegexpMatches(
+    case.assertRegex(
         table_output, '{}\n{}'.format(
             'Cache'.center(TABLE_WIDTH),
             ('-' * TABLE_WIDTH)))
     case.assertEqual(
         table_output.count('-'), TABLE_WIDTH * 2)
-    case.assertRegexpMatches(
+    case.assertRegex(
         table_output, r'{}{}'.format(
             '000'.center(col_width),
             '001'.center(col_width)))
-    case.assertRegexpMatches(
+    case.assertRegex(
         table_output, r'{}{}'.format(
             '88,89'.center(col_width),
             '2,3 42,43'.center(col_width)))
@@ -137,11 +137,11 @@ def test_display_cache_fully_assoc():
             ]
         }, table_width=TABLE_WIDTH)
     table_output = out.getvalue()
-    case.assertRegexpMatches(
+    case.assertRegex(
         table_output, '{}\n{}'.format(
             'Cache'.center(TABLE_WIDTH),
             ('-' * TABLE_WIDTH)))
     case.assertEqual(
         table_output.count('-'), TABLE_WIDTH)
-    case.assertRegexpMatches(
+    case.assertRegex(
         table_output, '2,3 252,253'.center(TABLE_WIDTH))

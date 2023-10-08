@@ -36,7 +36,7 @@ def test_get_separator():
 def test_str_title():
     """should correctly display title"""
     table = Table(num_cols=5, width=12, title='Cache')
-    case.assertRegexpMatches(
+    case.assertRegex(
         ''.join(('Cache'.center(12), '\n', ('-' * 12))), str(table))
 
 
