@@ -1,0 +1,44 @@
+[project]
+name = "cache-simulator"
+version = "2.0.1"
+description = "A processor cache simulator for the MIPS ISA"
+readme = "README.md"
+requires-python = ">=3.4"
+authors = [
+    {name = "Caleb Evans", email = "caleb@calebevans.me"}
+]
+maintainers = [
+    {name = 'Caleb Evans', email = 'caleb@calebevans.me'}
+]
+license = {file = 'LICENSE.txt'}
+keywords = ["mips", "processor", "cache", "simulator", "architecture"]
+
+[project.urls]
+homepage = "https://github.com/caleb531/cache-simulator"
+documentation = "https://github.com/caleb531/cache-simulator#readme"
+repository = "https://github.com/caleb531/cache-simulator"
+changelog = "https://github.com/caleb531/cache-simulator/releases"
+
+[project.scripts]
+cache-simulator = "cachesimulator.__main__:main"
+
+[build-system]
+requires = ["setuptools", "wheel"]
+
+# Configuration for coverage.py (https://pypi.python.org/pypi/coverage)
+
+[tool.coverage.run]
+# Enable branch coverage
+branch = true
+
+[tool.coverage.report]
+# Regexes for lines to exclude from consideration
+exclude_lines = [
+    "pragma: no cover",
+    # Ignore non-runnable code
+    "if __name__ == .__main__.:",
+    "pass",
+]
+
+# Only check coverage for source files
+include = ["cachesimulator/*.py"]
