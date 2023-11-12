@@ -3,10 +3,10 @@
 import math
 import shutil
 
-from cachesimulator.bin_addr import BinaryAddress
-from cachesimulator.cache import Cache
-from cachesimulator.reference import Reference
-from cachesimulator.table import Table
+from bin_addr import BinaryAddress
+from cache import Cache
+from reference import Reference
+from table import Table
 
 # The names of all reference table columns
 REF_COL_NAMES = ('WordAddr', 'BinAddr', 'Tag', 'Index', 'Offset', 'Hit/Miss')
@@ -94,25 +94,43 @@ class Simulator(object):
         num_blocks = cache_size // num_words_per_block
         num_sets = num_blocks // num_blocks_per_set
 
+        
+        num_blocks2 = cache_size * 2 // num_words_per_block
+        num_sets2 = num_blocks2 // num_blocks_per_set
+
+
         # Ensure that the number of bits used to represent each address is
-        # always large enough to represent the largest address
+        # always large enough to represent the largest address ex) 253 -> 8
         num_addr_bits = max(num_addr_bits, int(math.log2(max(word_addrs))) + 1)
 
         num_offset_bits = int(math.log2(num_words_per_block))
         num_index_bits = int(math.log2(num_sets))
+        num_index_bits2 = int(math.log2(num_sets2))
         num_tag_bits = num_addr_bits - num_index_bits - num_offset_bits
+        num_tag_bits2 = num_addr_bits - num_index_bits2 - num_offset_bits
 
         refs = self.get_addr_refs(
             word_addrs, num_addr_bits,
             num_offset_bits, num_index_bits, num_tag_bits)
+        
+        refs2 = self.get_addr_refs(
+            word_addrs,num_addr_bits,
+            num_offset_bits,num_index_bits2,num_tag_bits2
+        )
 
+        # Make L1 cache
         cache = Cache(
             num_sets=num_sets,
             num_index_bits=num_index_bits)
+        
+        cache2 = Cache(
+            num_sets=num_sets2,
+            num_index_bits=num_index_bits2)
 
-        cache.read_refs(
+        
+        cache.read_refs(cache2,
             num_blocks_per_set, num_words_per_block,
-            replacement_policy, refs)
+            replacement_policy, refs,refs2)
 
         # The character-width of all displayed tables
         # Attempt to fit table to terminal width, otherwise use default of 80
@@ -123,4 +141,8 @@ class Simulator(object):
         self.display_addr_refs(refs, table_width)
         print()
         self.display_cache(cache, table_width)
+        print()
+        self.display_addr_refs(refs2,table_width)
+        print()
+        self.display_cache(cache2,table_width)
         print()

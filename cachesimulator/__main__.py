@@ -2,7 +2,7 @@
 
 import argparse
 
-from cachesimulator.simulator import Simulator
+from simulator import Simulator
 
 
 # Parse command-line arguments passed to the program

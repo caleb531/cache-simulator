@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
-from cachesimulator.bin_addr import BinaryAddress
-from cachesimulator.reference import ReferenceCacheStatus
-from cachesimulator.word_addr import WordAddress
+from bin_addr import BinaryAddress
+from reference import ReferenceCacheStatus
+from word_addr import WordAddress
 
 
 class Cache(dict):
@@ -80,20 +80,33 @@ class Cache(dict):
             blocks.append(new_entry)
 
     # Simulate the cache by reading the given address references into it
-    def read_refs(self, num_blocks_per_set,
-                  num_words_per_block, replacement_policy, refs):
+    def read_refs(self,cache2, num_blocks_per_set,
+                  num_words_per_block, replacement_policy, refs,refs2):
 
-        for ref in refs:
+        for ref,ref2 in zip(refs,refs2):
+
             self.mark_ref_as_last_seen(ref)
-
+            cache2.mark_ref_as_last_seen(ref2) 
             # Record if the reference is already in the cache or not
             if self.is_hit(ref.index, ref.tag):
                 # Give emphasis to hits in contrast to misses
-                ref.cache_status = ReferenceCacheStatus.hit
+                ref.cache_status = ReferenceCacheStatus.l1_hit
+                ref2.cache_status = ReferenceCacheStatus.l1_hit
             else:
-                ref.cache_status = ReferenceCacheStatus.miss
                 self.set_block(
-                    replacement_policy=replacement_policy,
-                    num_blocks_per_set=num_blocks_per_set,
-                    addr_index=ref.index,
-                    new_entry=ref.get_cache_entry(num_words_per_block))
+                        replacement_policy=replacement_policy,
+                        num_blocks_per_set=num_blocks_per_set,
+                        addr_index=ref.index,
+                        new_entry=ref.get_cache_entry(num_words_per_block))
+                if cache2.is_hit(ref2.index,ref2.tag):
+                    ref.cache_status = ReferenceCacheStatus.l2_hit
+                    ref2.cache_status = ReferenceCacheStatus.l2_hit
+                else:
+                    ref.cache_status = ReferenceCacheStatus.miss
+                    ref2.cache_status = ReferenceCacheStatus.miss
+                    cache2.set_block(
+                        replacement_policy=replacement_policy,
+                        num_blocks_per_set=num_blocks_per_set,
+                        addr_index=ref2.index,
+                        new_entry=ref2.get_cache_entry(num_words_per_block))   
+                    

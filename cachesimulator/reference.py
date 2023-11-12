@@ -3,8 +3,8 @@
 from collections import OrderedDict
 from enum import Enum
 
-from cachesimulator.bin_addr import BinaryAddress
-from cachesimulator.word_addr import WordAddress
+from bin_addr import BinaryAddress
+from word_addr import WordAddress
 
 
 # An address reference consisting of the address and all of its components
@@ -38,12 +38,15 @@ class Reference(object):
 class ReferenceCacheStatus(Enum):
 
     miss = 0
-    hit = 1
+    l1_hit = 1
+    l2_hit = 2
 
     # Define how reference statuses are displayed in simulation results
     def __str__(self):
-        if self.value == ReferenceCacheStatus.hit.value:
-            return 'HIT'
+        if self.value == ReferenceCacheStatus.l1_hit.value:
+            return 'L1_HIT'
+        elif self.value == ReferenceCacheStatus.l2_hit.value:
+            return 'L2_HIT'
         else:
             return 'miss'
 
