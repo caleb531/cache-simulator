@@ -1,6 +1,6 @@
 # Cache Simulator
 
-*Copyright 2015-2022 Caleb Evans*  
+*Copyright 2015-2024 Caleb Evans*  
 *Released under the MIT license*
 
 [![tests](https://github.com/caleb531/cache-simulator/actions/workflows/tests.yml/badge.svg)](https://github.com/caleb531/cache-simulator/actions/workflows/tests.yml)
