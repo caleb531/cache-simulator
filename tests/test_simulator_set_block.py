@@ -5,10 +5,8 @@ import unittest
 
 from cachesimulator.cache import Cache
 
-case = unittest.TestCase()
 
-
-class TestSetBlock(object):
+class TestSetBlock(unittest.TestCase):
     """set_block should behave correctly in all cases"""
 
     def reset(self):
@@ -37,7 +35,7 @@ class TestSetBlock(object):
             num_blocks_per_set=4,
             addr_index='010',
             new_entry=self.new_entry)
-        case.assertEqual(self.cache, {
+        self.assertEqual(self.cache, {
             '010': [{'tag': '1111'}]
         })
 
@@ -50,7 +48,7 @@ class TestSetBlock(object):
             num_blocks_per_set=4,
             addr_index='010',
             new_entry=self.new_entry)
-        case.assertEqual(self.cache, {
+        self.assertEqual(self.cache, {
             '010': [
                 {'tag': '1000'},
                 {'tag': '1100'},
@@ -68,7 +66,7 @@ class TestSetBlock(object):
             num_blocks_per_set=4,
             addr_index='010',
             new_entry=self.new_entry)
-        case.assertEqual(self.cache, {
+        self.assertEqual(self.cache, {
             '010': [
                 {'tag': '1000'},
                 {'tag': '1100'},
@@ -87,5 +85,5 @@ class TestSetBlock(object):
             num_blocks_per_set=4,
             addr_index='010',
             new_entry=self.new_entry)
-        case.assertIsNot(self.cache, original_cache)
-        case.assertEqual(self.cache, original_cache)
+        self.assertIsNot(self.cache, original_cache)
+        self.assertEqual(self.cache, original_cache)
