@@ -19,7 +19,8 @@ class Cache(dict):
         else:
             for i in range(num_sets):
                 index = BinaryAddress(
-                    word_addr=WordAddress(i), num_addr_bits=num_index_bits)
+                    word_addr=WordAddress(i), num_addr_bits=num_index_bits
+                )
                 self[index] = []
 
     # Every time we see an address, place it at the top of the
@@ -38,50 +39,48 @@ class Cache(dict):
 
         # Ensure that indexless fully associative caches are accessed correctly
         if addr_index is None:
-            blocks = self['0']
+            blocks = self["0"]
         elif addr_index in self:
             blocks = self[addr_index]
         else:
             return False
 
         for block in blocks:
-            if block['tag'] == addr_tag:
+            if block["tag"] == addr_tag:
                 return True
 
         return False
 
     # Iterate through the recently-used entries in reverse order for MRU
     def replace_block(self, blocks, replacement_policy, addr_index, new_entry):
-        if replacement_policy == 'mru':
+        if replacement_policy == "mru":
             recently_used_addrs = reversed(self.recently_used_addrs)
         else:
             recently_used_addrs = self.recently_used_addrs
         # Replace the first matching entry with the entry to add
         for recent_index, recent_tag in recently_used_addrs:
             for i, block in enumerate(blocks):
-                if (recent_index == addr_index and
-                        block['tag'] == recent_tag):
+                if recent_index == addr_index and block["tag"] == recent_tag:
                     blocks[i] = new_entry
                     return
 
     # Adds the given entry to the cache at the given index
-    def set_block(self, replacement_policy,
-                  num_blocks_per_set, addr_index, new_entry):
+    def set_block(self, replacement_policy, num_blocks_per_set, addr_index, new_entry):
         # Place all cache entries in a single set if cache is fully associative
         if addr_index is None:
-            blocks = self['0']
+            blocks = self["0"]
         else:
             blocks = self[addr_index]
         # Replace MRU or LRU entry if number of blocks in set exceeds the limit
         if len(blocks) == num_blocks_per_set:
-            self.replace_block(
-                blocks, replacement_policy, addr_index, new_entry)
+            self.replace_block(blocks, replacement_policy, addr_index, new_entry)
         else:
             blocks.append(new_entry)
 
     # Simulate the cache by reading the given address references into it
-    def read_refs(self, num_blocks_per_set,
-                  num_words_per_block, replacement_policy, refs):
+    def read_refs(
+        self, num_blocks_per_set, num_words_per_block, replacement_policy, refs
+    ):
 
         for ref in refs:
             self.mark_ref_as_last_seen(ref)
@@ -96,4 +95,5 @@ class Cache(dict):
                     replacement_policy=replacement_policy,
                     num_blocks_per_set=num_blocks_per_set,
                     addr_index=ref.index,
-                    new_entry=ref.get_cache_entry(num_words_per_block))
+                    new_entry=ref.get_cache_entry(num_words_per_block),
+                )

@@ -5,13 +5,9 @@
 class Table(object):
 
     # Map alignment keywords to their respective string format specifiers
-    alignment_symbols = {
-        'left': '<',
-        'center': '^',
-        'right': '>'
-    }
+    alignment_symbols = {"left": "<", "center": "^", "right": ">"}
 
-    def __init__(self, num_cols, width, alignment='left', title=None):
+    def __init__(self, num_cols, width, alignment="left", title=None):
 
         self.title = title
         self.width = width
@@ -23,7 +19,7 @@ class Table(object):
     # Retrieves a separator used to separate rows
     def get_separator(self):
 
-        return '-' * self.width
+        return "-" * self.width
 
     def __str__(self):
 
@@ -34,9 +30,12 @@ class Table(object):
             table_strs.append(self.get_separator())
 
         # Format string used to align columns
-        cell_format_str = ''.join('{{:{}{}}}'.format(
-            Table.alignment_symbols[self.alignment],
-            self.width // self.num_cols) for i in range(self.num_cols))
+        cell_format_str = "".join(
+            "{{:{}{}}}".format(
+                Table.alignment_symbols[self.alignment], self.width // self.num_cols
+            )
+            for i in range(self.num_cols)
+        )
 
         if self.header:
             table_strs.append(cell_format_str.format(*self.header))
@@ -45,4 +44,4 @@ class Table(object):
         for row in self.rows:
             table_strs.append(cell_format_str.format(*map(str, row)))
 
-        return '\n'.join(table_strs)
+        return "\n".join(table_strs)

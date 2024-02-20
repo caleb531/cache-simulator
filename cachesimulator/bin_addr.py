@@ -9,8 +9,7 @@ class BinaryAddress(str):
     def __new__(cls, bin_addr=None, word_addr=None, num_addr_bits=0):
 
         if word_addr is not None:
-            return super().__new__(
-                cls, bin(word_addr)[2:].zfill(num_addr_bits))
+            return super().__new__(cls, bin(word_addr)[2:].zfill(num_addr_bits))
         else:
             return super().__new__(cls, bin_addr)
 
@@ -27,7 +26,7 @@ class BinaryAddress(str):
             # Otherwise, bisect binary string and separate halves with a space
             left = cls.prettify(bin_addr[:mid], min_bits_per_group)
             right = cls.prettify(bin_addr[mid:], min_bits_per_group)
-            return ' '.join((left, right))
+            return " ".join((left, right))
 
     # Retrieves the tag used to distinguish cache entries with the same index
     def get_tag(self, num_tag_bits):
