@@ -23,7 +23,7 @@ changelog = "https://github.com/caleb531/cache-simulator/releases"
 cache-simulator = "cachesimulator.__main__:main"
 
 [build-system]
-requires = ["setuptools", "wheel"]
+requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
 [tool.flake8]
