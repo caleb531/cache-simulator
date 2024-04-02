@@ -8,7 +8,7 @@ flake8-isort==6.1.1
 isort==5.13.2
 mccabe==0.7.0
 mypy-extensions==1.0.0
-nose2==0.12.0
+nose2==0.14.1
 packaging==23.2
 pathspec==0.12.1
 platformdirs==4.2.0
