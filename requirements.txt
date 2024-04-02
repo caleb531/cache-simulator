@@ -1,4 +1,4 @@
-black==24.2.0
+black==24.3.0
 build==1.0.3
 click==8.1.7
 coverage==6.5.0
