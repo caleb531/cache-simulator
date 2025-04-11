@@ -10,7 +10,7 @@ authors = [
 maintainers = [
     {name = 'Caleb Evans', email = 'caleb@calebevans.me'}
 ]
-license = {file = 'LICENSE.txt'}
+license = "MIT"
 keywords = ["mips", "processor", "cache", "simulator", "architecture"]
 
 [project.urls]
