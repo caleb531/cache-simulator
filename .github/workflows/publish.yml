@@ -33,17 +33,7 @@ jobs:
       run: uv build --sdist --wheel --out-dir dist/
 
     - name: Publish distribution to Test PyPI
-      uses: pypa/gh-action-pypi-publish@release/v1
-      with:
-        repository_url: https://test.pypi.org/legacy/
-        # The pypa/gh-action-pypi-publish action sources attestations from the
-        # same source, so leaving attestations enabled (the default behavior)
-        # for both steps will cause the production PyPI step to fail; however,
-        # disabling attestations on the test PyPI step should allow the
-        # production PyPI step to succeed
-        attestations: false
+      run: uv publish --publish-url https://test.pypi.org/legacy/
 
     - name: Publish distribution to PyPI
-      uses: pypa/gh-action-pypi-publish@release/v1
-      with:
-        repository_url: https://upload.pypi.org/legacy/
+      run: uv publish
