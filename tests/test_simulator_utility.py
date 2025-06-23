@@ -7,7 +7,6 @@ from cachesimulator.word_addr import WordAddress
 
 
 class TestSimulatorUtility(unittest.TestCase):
-
     def test_get_bin_addr_unpadded(self):
         """
         get_bin_addr should return unpadded binary address of word address

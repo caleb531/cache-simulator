@@ -6,10 +6,8 @@ from cachesimulator.word_addr import WordAddress
 
 
 class Cache(dict):
-
     # Initializes the reference cache with a fixed number of sets
     def __init__(self, cache=None, num_sets=None, num_index_bits=0):
-
         # A list of recently ordered addresses, ordered from least-recently
         # used to most
         self.recently_used_addrs = []
@@ -26,7 +24,6 @@ class Cache(dict):
     # Every time we see an address, place it at the top of the
     # list of recently-seen addresses
     def mark_ref_as_last_seen(self, ref):
-
         # The index and tag (not the offset) uniquely identify each address
         addr_id = (ref.index, ref.tag)
         if addr_id in self.recently_used_addrs:
@@ -36,7 +33,6 @@ class Cache(dict):
     # Returns True if a block at the given index and tag exists in the cache,
     # indicating a hit; returns False otherwise, indicating a miss
     def is_hit(self, addr_index, addr_tag):
-
         # Ensure that indexless fully associative caches are accessed correctly
         if addr_index is None:
             blocks = self["0"]
@@ -81,7 +77,6 @@ class Cache(dict):
     def read_refs(
         self, num_blocks_per_set, num_words_per_block, replacement_policy, refs
     ):
-
         for ref in refs:
             self.mark_ref_as_last_seen(ref)
 

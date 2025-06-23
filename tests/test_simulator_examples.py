@@ -11,7 +11,6 @@ import cachesimulator.__main__ as main
 
 
 class TestSimulatorExamples(unittest.TestCase):
-
     maxDiff = 10000
 
     def get_examples(self):
@@ -43,10 +42,14 @@ class TestSimulatorExamples(unittest.TestCase):
 
         for example in self.get_examples():
             out = io.StringIO()
-            with patch("sys.argv", [main.__file__, *example["args"]]), patch(
-                "shutil.get_terminal_size",
-                return_value=TerminalSize(columns=80, lines=20),
-            ), contextlib.redirect_stdout(out):
+            with (
+                patch("sys.argv", [main.__file__, *example["args"]]),
+                patch(
+                    "shutil.get_terminal_size",
+                    return_value=TerminalSize(columns=80, lines=20),
+                ),
+                contextlib.redirect_stdout(out),
+            ):
                 main.main()
             main_output = out.getvalue()
             yield (

@@ -9,7 +9,6 @@ import cachesimulator.__main__ as main
 
 
 class TestSimulatorMain(unittest.TestCase):
-
     @patch(
         "sys.argv",
         [

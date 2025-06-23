@@ -7,7 +7,6 @@ from cachesimulator.reference import ReferenceCacheStatus
 
 
 class TestSimulatorHit(unittest.TestCase):
-
     def setUp(self):
         self.cache = Cache({"010": [{"tag": "1011", "data": [180, 181]}]})
 

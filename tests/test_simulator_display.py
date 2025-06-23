@@ -11,9 +11,7 @@ TABLE_WIDTH = 80
 
 
 class TestSimulatorDisplay(unittest.TestCase):
-
     def apply_cache_statuses_to_refs(self, cache_statuses, refs):
-
         for cache_status, ref in zip(cache_statuses, refs):
             ref.cache_status = cache_status
 

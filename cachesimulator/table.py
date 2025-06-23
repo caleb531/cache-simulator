@@ -3,12 +3,10 @@
 
 # A class for displaying ASCII tables
 class Table(object):
-
     # Map alignment keywords to their respective string format specifiers
     alignment_symbols = {"left": "<", "center": "^", "right": ">"}
 
     def __init__(self, num_cols, width, alignment="left", title=None):
-
         self.title = title
         self.width = width
         self.num_cols = num_cols
@@ -18,11 +16,9 @@ class Table(object):
 
     # Retrieves a separator used to separate rows
     def get_separator(self):
-
         return "-" * self.width
 
     def __str__(self):
-
         table_strs = []
 
         if self.title:

@@ -17,12 +17,10 @@ DEFAULT_TABLE_WIDTH = 80
 
 
 class Simulator(object):
-
     # Retrieves a list of address references for use by simulator
     def get_addr_refs(
         self, word_addrs, num_addr_bits, num_offset_bits, num_index_bits, num_tag_bits
     ):
-
         return [
             Reference(
                 word_addr, num_addr_bits, num_offset_bits, num_index_bits, num_tag_bits
@@ -33,12 +31,10 @@ class Simulator(object):
     # Displays details for each address reference, including its hit/miss
     # status
     def display_addr_refs(self, refs, table_width):
-
         table = Table(num_cols=len(REF_COL_NAMES), width=table_width, alignment="right")
         table.header[:] = REF_COL_NAMES
 
         for ref in refs:
-
             if ref.tag is not None:
                 ref_tag = ref.tag
             else:
@@ -70,7 +66,6 @@ class Simulator(object):
 
     # Displays the contents of the given cache as nicely-formatted table
     def display_cache(self, cache, table_width):
-
         table = Table(num_cols=len(cache), width=table_width, alignment="center")
         table.title = "Cache"
 
@@ -102,7 +97,6 @@ class Simulator(object):
         num_addr_bits,
         word_addrs,
     ):
-
         num_blocks = cache_size // num_words_per_block
         num_sets = num_blocks // num_blocks_per_set
 

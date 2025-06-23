@@ -7,7 +7,6 @@ from cachesimulator.simulator import Simulator
 
 # Parse command-line arguments passed to the program
 def parse_cli_args():
-
     parser = argparse.ArgumentParser()
 
     parser.add_argument(
@@ -53,7 +52,6 @@ def parse_cli_args():
 
 
 def main():
-
     cli_args = parse_cli_args()
     sim = Simulator()
     sim.run_simulation(**vars(cli_args))

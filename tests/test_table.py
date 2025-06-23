@@ -6,7 +6,6 @@ from cachesimulator.table import Table
 
 
 class TestTable(unittest.TestCase):
-
     def test_init_default(self):
         """
         should initialize table with required parameters and default values

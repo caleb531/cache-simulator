@@ -9,7 +9,6 @@ from cachesimulator.word_addr import WordAddress
 
 # An address reference consisting of the address and all of its components
 class Reference(object):
-
     def __init__(
         self, word_addr, num_addr_bits, num_offset_bits, num_index_bits, num_tag_bits
     ):
@@ -37,7 +36,6 @@ class Reference(object):
 
 # An enum representing the cache status of a reference (i.e. hit or miss)
 class ReferenceCacheStatus(Enum):
-
     miss = 0
     hit = 1
 
