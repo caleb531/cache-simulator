@@ -18,4 +18,5 @@ coverage.xml
 nosetests.xml
 
 # Required packages
+.venv
 .virtualenv
