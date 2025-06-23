@@ -37,7 +37,6 @@ class Table(object):
             table_strs.append(cell_format_str.format(*self.header))
             table_strs.append(self.get_separator())
 
-        for row in self.rows:
-            table_strs.append(cell_format_str.format(*map(str, row)))
+        table_strs.extend(cell_format_str.format(*map(str, row)) for row in self.rows)
 
         return "\n".join(table_strs)
