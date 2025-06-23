@@ -32,8 +32,8 @@ jobs:
 
     - name: Test with nose2
       run: |
-        coverage run -m nose2 tests
-        coverage lcov -o cover/coverage.lcov
+        uv run coverage run -m nose2
+        uv run coverage lcov -o cover/coverage.lcov
 
     - name: Coveralls
       uses: coverallsapp/github-action@master
