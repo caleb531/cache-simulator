@@ -50,8 +50,6 @@ select = [
     "I",
     # perflint
     "PERF",
-    # flake8-executable
-    "EXE"
 ]
 
 # Configuration for coverage.py (https://pypi.python.org/pypi/coverage)
