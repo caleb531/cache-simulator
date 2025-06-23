@@ -8,7 +8,7 @@ authors = [
     {name = "Caleb Evans", email = "caleb@calebevans.me"}
 ]
 maintainers = [
-    {name = 'Caleb Evans', email = 'caleb@calebevans.me'}
+    {name = "Caleb Evans", email = "caleb@calebevans.me"}
 ]
 license = "MIT"
 keywords = ["mips", "processor", "cache", "simulator", "architecture"]
