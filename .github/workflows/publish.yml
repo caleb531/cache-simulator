@@ -28,7 +28,7 @@ jobs:
       run: uv lock --check
 
     - name: Build a binary wheel and a source tarball
-      run: uv build --sdist --wheel --out-dir dist/
+      run: uv build
 
     - name: Publish distribution to Test PyPI
       run: uv publish --publish-url https://test.pypi.org/legacy/

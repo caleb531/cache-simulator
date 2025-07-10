@@ -30,4 +30,4 @@ jobs:
       run: uv lock --check
 
     - name: Build a binary wheel and a source tarball
-      run: uv build --sdist --wheel --out-dir dist/
+      run: uv build
