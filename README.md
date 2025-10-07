@@ -51,10 +51,16 @@ This produces the following output:
 
 ## Installing
 
-You can install Cache Simulator via pip (ideally globally):
+You can install Cache Simulator via pip, *or* using your preferred package manager (like uv):
 
+```sh
+# via pip
+pip3 install cache-simulator
 ```
-pip install cache-simulator
+
+```sh
+# via uv
+uv tool install cache-simulator
 ```
 
 ## Command-line parameters
