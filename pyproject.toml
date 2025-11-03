@@ -61,8 +61,7 @@ select = [
 [tool.coverage.run]
 # Enable branch coverage
 branch = true
-# Only check coverage for source files
-include = ["cachesimulator/*.py"]
+source = ["cachesimulator"]
 
 [tool.coverage.report]
 # Regexes for lines to exclude from consideration
