@@ -120,12 +120,7 @@ class Simulator(object):
 
         # The character-width of all displayed tables
         # Attempt to fit table to terminal width, otherwise use default of 80
-        table_width = max(
-            (
-                shutil.get_terminal_size((DEFAULT_TABLE_WIDTH, None)).columns,
-                DEFAULT_TABLE_WIDTH,
-            )
-        )
+        table_width = shutil.get_terminal_size((DEFAULT_TABLE_WIDTH, None)).columns
 
         print()
         self.display_addr_refs(refs, table_width)
