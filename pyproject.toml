@@ -32,7 +32,6 @@ module-root = ""
 
 [dependency-groups]
 dev = [
-    "coverage==7.6.10",
     "pytest>=8.4.2",
     "pytest-cov>=6.3.0",
     "ruff==0.12.0",
