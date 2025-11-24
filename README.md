@@ -17,7 +17,7 @@ contents of the cache.
 
 For example, the following command simulates a 3-way set associative LRU cache,
 with 2 words per block. To see all examples and their respective outputs, see
-[examples.txt](examples.txt).
+[examples.sh](examples.sh).
 
 ```sh
 # 3-way set associative (LRU; 2 words per block)
